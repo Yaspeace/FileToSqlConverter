@@ -3,7 +3,7 @@ using ExcelToSqlConverter.Models.Files;
 
 namespace ExcelToSqlConverter.Controllers
 {
-    public class MainController
+    public class MainController : IDisposable
     {
         public ICollection<IFieldOptions> Fields { get; set; }
 
@@ -35,7 +35,7 @@ namespace ExcelToSqlConverter.Controllers
 
         public void ImportExcelDefault(string filename, bool headersLine)
         {
-            this.adapter = new ExcelFileAdapter(filename);
+            this.adapter = new NativeExcelFileAdapter(filename);
             ImportFile(adapter, headersLine);
         }
 
@@ -246,6 +246,12 @@ namespace ExcelToSqlConverter.Controllers
                 headersStr += ")";
                 sw.Write("\n) as " + headersStr);
             }
+        }
+
+        public void Dispose()
+        {
+            if (adapter is not null)
+                adapter.Dispose();
         }
     }
 }

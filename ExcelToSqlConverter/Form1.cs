@@ -72,6 +72,7 @@ namespace ExcelToSqlConverter
                 node.Tag = field;
                 if (field.Type == OptionsTypeEnum.Union)
                 {
+                    node.BackColor = Color.WhiteSmoke;
                     foreach (var sub in field.Fields)
                     {
                         var subnode = new TreeNode();
@@ -95,11 +96,9 @@ namespace ExcelToSqlConverter
 
         private void fieldsTree_DragDrop(object sender, DragEventArgs e)
         {
-            Point targetPoint = fieldsTree.PointToClient(new Point(e.X, e.Y));
-
-            TreeNode targetNode = fieldsTree.GetNodeAt(targetPoint);
-
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            var targetPoint = fieldsTree.PointToClient(new Point(e.X, e.Y));
+            var targetNode = fieldsTree.GetNodeAt(targetPoint);
+            var draggedNode = e.Data.GetData(typeof(TreeNode)) as TreeNode;
 
             if (!draggedNode.Equals(targetNode) && targetNode != null)
             {
@@ -144,18 +143,19 @@ namespace ExcelToSqlConverter
 
         private void fieldsTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Tag is IFieldOptions)
-            {
-                var form = new FieldPropertiesForm(e.Node.Tag as IFieldOptions);
-                if (form.ShowDialog() != DialogResult.OK) return;
-                _controller.SetFieldProperties(e.Node.Tag, form.Header, form.Quotes);
-            }
             if (e.Node.Tag is Union)
             {
                 var form = new UnionForm(e.Node.Tag as Union);
                 if (form.ShowDialog() != DialogResult.OK) return;
                 _controller.SetUnionProperties(e.Node.Tag, form.Header, form.Quotes, form.Splitter);
             }
+            else if (e.Node.Tag is IFieldOptions)
+            {
+                var form = new FieldPropertiesForm(e.Node.Tag as IFieldOptions);
+                if (form.ShowDialog() != DialogResult.OK) return;
+                _controller.SetFieldProperties(e.Node.Tag, form.Header, form.Quotes);
+            }
+
             SetTree();
             RedrawExample();
         }
@@ -172,6 +172,11 @@ namespace ExcelToSqlConverter
             _controller.Move(fieldsTree.SelectedNode.Tag, false);
             SetTree();
             RedrawExample();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _controller.Dispose();
         }
     }
 }

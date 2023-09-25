@@ -4,7 +4,12 @@ namespace ExcelToSqlConverter.Models.Files
 {
     public class ExcelFileAdapter : IFileAdapter
     {
-        public bool End => _curRow >= _sheet.PhysicalRowCount;
+        public bool End => _curRow >= maxRow; //_curRow >= _sheet.PhysicalRowCount;
+
+        private int minCol;
+        private int maxCol;
+        private int minRow;
+        private int maxRow;
 
         private WorkSheet _sheet;
 
@@ -16,12 +21,19 @@ namespace ExcelToSqlConverter.Models.Files
         {
             wb = WorkBook.Load(filename);
             _sheet = wb.DefaultWorkSheet;
+            minRow = 0;
+            maxRow = _sheet.PhysicalRowCount;
         }
 
         public ExcelFileAdapter(string filename, string listName)
         {
             wb = WorkBook.Load(filename);
             _sheet = wb.GetWorkSheet(listName);
+        }
+
+        public ExcelFileAdapter(string filename, int fromRow, int toRow, int fromCol, int toCol)
+        {
+
         }
 
         public string[]? Read()
@@ -42,6 +54,11 @@ namespace ExcelToSqlConverter.Models.Files
         }
 
         public void Close()
+        {
+            wb.Close();
+        }
+
+        public void Dispose()
         {
             wb.Close();
         }

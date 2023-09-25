@@ -1,6 +1,6 @@
 ﻿namespace ExcelToSqlConverter.Models.Files
 {
-    public interface IFileAdapter
+    public interface IFileAdapter : IDisposable
     {
         public bool End { get; }
         public string[]? Read();

@@ -31,5 +31,10 @@
         {
             _sr.Close();
         }
+
+        public void Dispose()
+        {
+            _sr.Dispose();
+        }
     }
 }

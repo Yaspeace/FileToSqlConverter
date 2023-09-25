@@ -30,7 +30,8 @@
         {
             System.Windows.Forms.Label label1;
             System.Windows.Forms.Label label2;
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Все поля");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Все поля");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.fileNameTb = new System.Windows.Forms.TextBox();
             this.chooseFileBtn = new System.Windows.Forms.Button();
             this.exampleLbl = new System.Windows.Forms.Label();
@@ -140,10 +141,10 @@
             this.fieldsTree.AllowDrop = true;
             this.fieldsTree.Location = new System.Drawing.Point(12, 66);
             this.fieldsTree.Name = "fieldsTree";
-            treeNode3.Name = "rootNode";
-            treeNode3.Text = "Все поля";
+            treeNode1.Name = "rootNode";
+            treeNode1.Text = "Все поля";
             this.fieldsTree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.fieldsTree.Size = new System.Drawing.Size(407, 228);
             this.fieldsTree.TabIndex = 13;
             this.fieldsTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.fieldsTree_ItemDrag);
@@ -221,8 +222,10 @@
             this.Controls.Add(this.chooseFileBtn);
             this.Controls.Add(label1);
             this.Controls.Add(this.fileNameTb);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Files to SQL converter";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
