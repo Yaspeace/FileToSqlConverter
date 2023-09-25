@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 
 namespace ExcelToSqlConverter.Models.Files
 {
@@ -44,7 +46,7 @@ namespace ExcelToSqlConverter.Models.Files
 
         public string[]? Read()
         {
-            end = reader.Read();
+            end = !reader.Read();
             return end
                 ? null
                 : Enumerable.Range(0, reader.FieldCount).Select(i => reader.GetString(i)).ToArray();
