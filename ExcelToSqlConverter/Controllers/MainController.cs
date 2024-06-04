@@ -5,9 +5,11 @@ namespace ExcelToSqlConverter.Controllers
 {
     public class MainController : IDisposable
     {
-        public ICollection<IFieldOptions> Fields { get; set; }
+        public ICollection<IFieldOptions> Fields { get; set; } = new List<IFieldOptions>();
 
-        private GuidField guidField;
+        private string[] Headers => Fields?.Select(x => x.Header).ToArray() ?? Array.Empty<string>();
+
+        private readonly GuidField guidField = new("Guid");
 
         private string[]? cachedData;
 
@@ -15,79 +17,67 @@ namespace ExcelToSqlConverter.Controllers
 
         private bool headersLine;
 
-        public MainController()
-        {
-            Fields = new List<IFieldOptions>();
-            guidField = new GuidField("Guid");
-        }
-
         public void ImportCsv(string filename, char splitter, bool headersLine)
-        {
-            this.adapter = new CsvFileAdapter(filename, splitter);
-            ImportFile(adapter, headersLine);
-        }
+            => SetAdapterAndImport(new CsvFileAdapter(filename, splitter), headersLine);
 
         public void ImportExcel(string filename, string listName, bool headersLine)
-        {
-            this.adapter = new ExcelFileAdapter(filename, listName);
-            ImportFile(adapter, headersLine);
-        }
+            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, listName), headersLine);
 
         public void ImportExcelDefault(string filename, bool headersLine)
+            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename), headersLine);
+
+        private void SetAdapterAndImport(IFileAdapter adapter, bool headersLine)
         {
-            this.adapter = new NativeExcelFileAdapter(filename);
-            ImportFile(adapter, headersLine);
+            this.adapter = adapter;
+            ImportFile(headersLine);
         }
 
-        private void ImportFile(IFileAdapter adapter, bool headersLine)
+        private void ImportFile(bool headersLine)
         {
+            if (adapter is null) throw new ArgumentNullException(nameof(adapter));
+
             Fields.Clear();
             this.headersLine = headersLine;
 
-            var data = adapter.Read() ?? new string[0];
+            var data = adapter.Read() ?? Array.Empty<string>();
             for (int i = 0; i < data.Length; i++)
             {
-                var header = headersLine ? data[i] : "Header" + i;
+                var header = headersLine ? data[i] : $"Header{i}";
                 Fields.Add(new FieldOptions(header, i));
             }
-            cachedData = data;
-            if (headersLine) cachedData = adapter.Read();
+
+            cachedData = headersLine ? adapter.Read() : data;
         }
 
         public void AddUnion(string header, string splitter)
+            => Fields.Add(new Union(header, splitter));
+
+        public void ReplaceFieldTo(IFieldOptions field, IFieldOptions target)
         {
-            Fields.Add(new Union(header, splitter));
-        }
-
-        public void PlaceTo(object obj, object to)
-        {
-            if (obj is not IFieldOptions || to is not IFieldOptions) return;
-            var objOpt = (obj as IFieldOptions) ?? throw new Exception("aboba");
-            var toOpt = (to as IFieldOptions) ?? throw new Exception("abeba");
-            if (objOpt.Type != OptionsTypeEnum.Field || toOpt.Type != OptionsTypeEnum.Union) return;
-
-            toOpt.Fields.Add(objOpt);
-            Fields.Remove(objOpt);
-        }
-
-        public void Remove(object obj)
-        {
-            var opt = obj as IFieldOptions;
-            if (opt == null) return;
-
-            if (opt.Type == OptionsTypeEnum.Union)
+            if (
+                field.Type != OptionsTypeEnum.Field ||
+                target.Type != OptionsTypeEnum.Union)
             {
-                foreach (var f in opt.Fields)
+                return;
+            }
+
+            target.Fields.Add(field);
+            Fields.Remove(field);
+        }
+
+        public void Remove(IFieldOptions fieldOpts)
+        {
+            if (fieldOpts.Type == OptionsTypeEnum.Union)
+            {
+                foreach (var f in fieldOpts.Fields)
                     Fields.Add(f);
             }
-            Fields.Remove(opt);
+
+            Fields.Remove(fieldOpts);
         }
 
-        public void Move(object obj, bool up)
+        public void Move(IFieldOptions field, bool up)
         {
-            var field = obj as IFieldOptions;
-            if (field == null) return;
-
             if (!Fields.Any() || !Fields.Contains(field)) return;
             if (up && field == Fields.First()) return;
             if (!up && field == Fields.Last()) return;
@@ -147,11 +137,10 @@ namespace ExcelToSqlConverter.Controllers
             if (cachedData == null) return "";
 
             var res = RecordFromData(cachedData);
-            var headers = GetHeaders();
 
             res += " as source(";
             var first = true;
-            foreach (var head in headers)
+            foreach (var head in Headers)
             {
                 if (!first) res += ",";
                 res += head;
@@ -161,97 +150,43 @@ namespace ExcelToSqlConverter.Controllers
             return res;
         }
 
-        private string[] GetHeaders()
-        {
-            return Fields.Select(x => x.Header).ToArray();
-        }
-
         private string RecordFromData(string[] data)
         {
-            var res = "(";
-            var first = true;
-            
-            foreach(var field in Fields)
-            {
-                if (!first) res += ",";
-                res += field.GetFieldValue(data);
-                first = false;
-            }
-            res += ")";
-            return res;
+            var fieldValuesArr = Fields.Select(x => x.GetFieldValue(data)).ToArray();
+            var fieldValues = string.Join(',', fieldValuesArr);
+
+            return $"({fieldValues})";
         }
 
         public void ExportFile(string to)
         {
-            /*using (var sw = new StreamWriter(to))
-            using (var sr = new StreamReader(from))
-            {
-                var line = sr.ReadLine();
-                if (headersLine) line = sr.ReadLine();
-                sw.Write("(values\n");
-
-                var data = line.Trim().Split(splitter);
-                var record = RecordFromData(data);
-                sw.Write("\t" + record);
-                while (!sr.EndOfStream)
-                {
-                    line = sr.ReadLine();
-                    if (line == null) break;
-                    data = line.Trim().Split(splitter);
-                    record = RecordFromData(data);
-                    sw.Write(",\n");
-                    sw.Write("\t" + record);
-                }
-                var headers = GetHeaders();
-                var headersStr = "source(";
-                var first = true;
-                foreach (var head in headers)
-                {
-                    if (!first) headersStr += ",";
-                    headersStr += head;
-                    first = false;
-                }
-                headersStr += ")";
-                sw.Write("\n) as " + headersStr);
-            }*/
-            if (adapter == null)
-                throw new Exception("Adapter is null!");
+            if (adapter == null) throw new ArgumentNullException(nameof(adapter));
             adapter.Reset();
 
-            using (var sw = new StreamWriter(to))
-            {
-                var data = adapter.Read();
-                if (headersLine) data = adapter.Read();
-                sw.Write("(values\n");
-                var record = RecordFromData(data);
-                sw.Write("\t" + record);
-                while (!adapter.End)
-                {
-                    data = adapter.Read();
-                    if (data == null) break;
-                    record = RecordFromData(data);
-                    sw.Write(",\n");
-                    sw.Write("\t" + record);
-                }
+            using var sw = new StreamWriter(to);
 
-                var headers = GetHeaders();
-                var headersStr = "source(";
-                var first = true;
-                foreach (var head in headers)
-                {
-                    if (!first) headersStr += ",";
-                    headersStr += head;
-                    first = false;
-                }
-                headersStr += ")";
-                sw.Write("\n) as " + headersStr);
+            var data = adapter.Read();
+            if (headersLine) data = adapter.Read();
+
+            if (data is null) return;
+
+            sw.Write($"(values\n\t{RecordFromData(data)}");
+
+            while (!adapter.End)
+            {
+                data = adapter.Read();
+                if (data == null) break;
+
+                sw.Write($",\n\t{RecordFromData(data)}");
             }
+
+            var headers = string.Join(',', Headers);
+            sw.Write($"\n) as source({headers})");
         }
 
         public void Dispose()
         {
-            if (adapter is not null)
-                adapter.Dispose();
+            adapter?.Dispose();
         }
     }
 }

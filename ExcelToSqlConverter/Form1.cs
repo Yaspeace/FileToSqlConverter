@@ -7,6 +7,8 @@ namespace ExcelToSqlConverter
     {
         private readonly MainController _controller;
 
+        private TreeNode FieldsTreeRoot => fieldsTree.Nodes[0]; 
+
         public Form1()
         {
             InitializeComponent();
@@ -61,7 +63,7 @@ namespace ExcelToSqlConverter
             }
         }
 
-        private void SetTree()
+        private void SetTree(int selectedIndex = -1)
         {
             fieldsTree.Nodes[0].Nodes.Clear();
 
@@ -84,6 +86,14 @@ namespace ExcelToSqlConverter
                 
                 fieldsTree.Nodes[0].Nodes.Add(node);
             }
+
+            if (selectedIndex >= 0 && FieldsTreeRoot.Nodes.Count > 0)
+            {
+                selectedIndex = Math.Min(selectedIndex, FieldsTreeRoot.Nodes.Count - 1);
+                fieldsTree.SelectedNode = FieldsTreeRoot.Nodes[selectedIndex];
+            }
+
+            fieldsTree.Select();
             fieldsTree.Refresh();
         }
 
@@ -98,11 +108,15 @@ namespace ExcelToSqlConverter
         {
             var targetPoint = fieldsTree.PointToClient(new Point(e.X, e.Y));
             var targetNode = fieldsTree.GetNodeAt(targetPoint);
-            var draggedNode = e.Data.GetData(typeof(TreeNode)) as TreeNode;
 
-            if (!draggedNode.Equals(targetNode) && targetNode != null)
+            if (
+                targetNode != null &&
+                e?.Data?.GetData(typeof(TreeNode)) is TreeNode draggedNode && draggedNode != null &&
+                !draggedNode.Equals(targetNode) &&
+                draggedNode.Tag is IFieldOptions field && field != null &&
+                targetNode.Tag is IFieldOptions target && target != null)
             {
-                _controller.PlaceTo(draggedNode.Tag, targetNode.Tag);
+                _controller.ReplaceFieldTo(field, target);
                 SetTree();
                 RedrawExample();
             }
@@ -127,9 +141,13 @@ namespace ExcelToSqlConverter
 
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-            _controller.Remove(fieldsTree.SelectedNode.Tag);
-            SetTree();
-            RedrawExample();
+            if (fieldsTree.SelectedNode.Tag is IFieldOptions fieldOpts && fieldOpts != null)
+            {
+                var fieldIdx = fieldsTree.SelectedNode.Index;
+                _controller.Remove(fieldOpts);
+                SetTree(fieldIdx);
+                RedrawExample();
+            }
         }
 
         private void exportBtn_Click(object sender, EventArgs e)
@@ -162,16 +180,22 @@ namespace ExcelToSqlConverter
 
         private void upBtn_Click(object sender, EventArgs e)
         {
-            _controller.Move(fieldsTree.SelectedNode.Tag, true);
-            SetTree();
-            RedrawExample();
+            if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
+            {
+                _controller.Move(field, true);
+                SetTree();
+                RedrawExample();
+            }
         }
 
         private void downBtn_Click(object sender, EventArgs e)
         {
-            _controller.Move(fieldsTree.SelectedNode.Tag, false);
-            SetTree();
-            RedrawExample();
+            if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
+            {
+                _controller.Move(field, false);
+                SetTree();
+                RedrawExample();
+            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
