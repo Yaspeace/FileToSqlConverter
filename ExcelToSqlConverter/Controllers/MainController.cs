@@ -1,11 +1,12 @@
 ﻿using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Files;
+using ExcelToSqlConverter.Extensions;
 
 namespace ExcelToSqlConverter.Controllers
 {
     public class MainController : IDisposable
     {
-        public ICollection<IFieldOptions> Fields { get; set; } = new List<IFieldOptions>();
+        public List<IFieldOptions> Fields { get; set; } = new();
 
         private string[] Headers => Fields?.Select(x => x.Header).ToArray() ?? Array.Empty<string>();
 
@@ -68,38 +69,17 @@ namespace ExcelToSqlConverter.Controllers
         public void Remove(IFieldOptions fieldOpts)
         {
             if (fieldOpts.Type == OptionsTypeEnum.Union)
-            {
-                foreach (var f in fieldOpts.Fields)
-                    Fields.Add(f);
-            }
+                Fields.AddRange(fieldOpts.Fields);
 
             Fields.Remove(fieldOpts);
         }
 
         public void Move(IFieldOptions field, bool up)
         {
-            if (!Fields.Any() || !Fields.Contains(field)) return;
-            if (up && field == Fields.First()) return;
-            if (!up && field == Fields.Last()) return;
-
-            var arr = Fields.ToArray();
-            int i = 0;
-            while (arr[i] != field) i++;
-
             if (up)
-            {
-                var tmp = arr[i - 1];
-                arr[i - 1] = field;
-                arr[i] = tmp;
-            }
+                Fields.MoveForward(field);
             else
-            {
-                var tmp = arr[i + 1];
-                arr[i + 1] = field;
-                arr[i] = tmp;
-            }
-
-            Fields = arr.ToList();
+                Fields.MoveBackward(field);
         }
 
         public void SetFieldProperties(object field, string header, bool quotes)
@@ -137,17 +117,8 @@ namespace ExcelToSqlConverter.Controllers
             if (cachedData == null) return "";
 
             var res = RecordFromData(cachedData);
-
-            res += " as source(";
-            var first = true;
-            foreach (var head in Headers)
-            {
-                if (!first) res += ",";
-                res += head;
-                first = false;
-            }
-            res += ")";
-            return res;
+            var headersStr = string.Join(',', Headers);
+            return $"{res} as source({headersStr})";
         }
 
         private string RecordFromData(string[] data)

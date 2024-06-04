@@ -40,8 +40,11 @@ namespace ExcelToSqlConverter
             var form = new ExcelImportForm();
             if (form.ShowDialog() != DialogResult.OK) return;
 
-            if (form.DefaultList) _controller.ImportExcelDefault(fileNameTb.Text, form.HeadersLine);
-            else _controller.ImportExcel(fileNameTb.Text, form.ListName, form.HeadersLine);
+            if (form.DefaultList)
+                _controller.ImportExcelDefault(fileNameTb.Text, form.HeadersLine);
+            else
+                _controller.ImportExcel(fileNameTb.Text, form.ListName, form.HeadersLine);
+
             _controller.SetGuidField(guidsCb.Checked);
 
             SetTree();
@@ -69,17 +72,23 @@ namespace ExcelToSqlConverter
 
             foreach (var field in _controller.Fields)
             {
-                var node = new TreeNode();
-                node.Text = field.Header;
-                node.Tag = field;
+                var node = new TreeNode()
+                {
+                    Text = field.Header,
+                    Tag = field
+                };
+
                 if (field.Type == OptionsTypeEnum.Union)
                 {
                     node.BackColor = Color.WhiteSmoke;
                     foreach (var sub in field.Fields)
                     {
-                        var subnode = new TreeNode();
-                        subnode.Text = sub.Header;
-                        subnode.Tag = sub;
+                        var subnode = new TreeNode()
+                        {
+                            Text = sub.Header,
+                            Tag = sub
+                        };
+
                         node.Nodes.Add(subnode);
                     }
                 }
@@ -161,15 +170,15 @@ namespace ExcelToSqlConverter
 
         private void fieldsTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Tag is Union)
+            if (e.Node.Tag is Union union && union != null)
             {
-                var form = new UnionForm(e.Node.Tag as Union);
+                var form = new UnionForm(union);
                 if (form.ShowDialog() != DialogResult.OK) return;
                 _controller.SetUnionProperties(e.Node.Tag, form.Header, form.Quotes, form.Splitter);
             }
-            else if (e.Node.Tag is IFieldOptions)
+            else if (e.Node.Tag is IFieldOptions field && field != null)
             {
-                var form = new FieldPropertiesForm(e.Node.Tag as IFieldOptions);
+                var form = new FieldPropertiesForm(field);
                 if (form.ShowDialog() != DialogResult.OK) return;
                 _controller.SetFieldProperties(e.Node.Tag, form.Header, form.Quotes);
             }
