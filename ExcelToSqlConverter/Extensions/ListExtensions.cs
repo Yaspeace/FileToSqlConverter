@@ -17,7 +17,7 @@
             if (idx == -1) return;
 
             list.RemoveAt(idx++);
-            list.Insert(Math.Min(idx, list.Count - 1), item);
+            list.Insert(Math.Min(idx, list.Count), item);
         }
     }
 }

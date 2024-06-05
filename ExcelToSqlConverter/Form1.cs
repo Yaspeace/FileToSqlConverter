@@ -66,7 +66,7 @@ namespace ExcelToSqlConverter
             }
         }
 
-        private void SetTree(int selectedIndex = -1)
+        private void SetTree()
         {
             fieldsTree.Nodes[0].Nodes.Clear();
 
@@ -75,7 +75,8 @@ namespace ExcelToSqlConverter
                 var node = new TreeNode()
                 {
                     Text = field.Header,
-                    Tag = field
+                    Tag = field,
+                    Name = field.Header
                 };
 
                 if (field.Type == OptionsTypeEnum.Union)
@@ -86,7 +87,8 @@ namespace ExcelToSqlConverter
                         var subnode = new TreeNode()
                         {
                             Text = sub.Header,
-                            Tag = sub
+                            Tag = sub,
+                            Name = sub.Header
                         };
 
                         node.Nodes.Add(subnode);
@@ -96,13 +98,6 @@ namespace ExcelToSqlConverter
                 fieldsTree.Nodes[0].Nodes.Add(node);
             }
 
-            if (selectedIndex >= 0 && FieldsTreeRoot.Nodes.Count > 0)
-            {
-                selectedIndex = Math.Min(selectedIndex, FieldsTreeRoot.Nodes.Count - 1);
-                fieldsTree.SelectedNode = FieldsTreeRoot.Nodes[selectedIndex];
-            }
-
-            fieldsTree.Select();
             fieldsTree.Refresh();
         }
 
@@ -154,7 +149,9 @@ namespace ExcelToSqlConverter
             {
                 var fieldIdx = fieldsTree.SelectedNode.Index;
                 _controller.Remove(fieldOpts);
-                SetTree(fieldIdx);
+
+                SetTree();
+                SelectNode(fieldIdx);
                 RedrawExample();
             }
         }
@@ -191,8 +188,12 @@ namespace ExcelToSqlConverter
         {
             if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
             {
+                var key = fieldsTree.SelectedNode.Name;
+
                 _controller.Move(field, true);
+
                 SetTree();
+                SelectNode(key);
                 RedrawExample();
             }
         }
@@ -201,8 +202,12 @@ namespace ExcelToSqlConverter
         {
             if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
             {
+                var key = fieldsTree.SelectedNode.Name;
+
                 _controller.Move(field, false);
+
                 SetTree();
+                SelectNode(key);
                 RedrawExample();
             }
         }
@@ -211,5 +216,27 @@ namespace ExcelToSqlConverter
         {
             _controller.Dispose();
         }
+
+        private void SelectNode(int index)
+        {
+            if (index >= 0 && FieldsTreeRoot.Nodes.Count > 0)
+            {
+                index = Math.Min(index, FieldsTreeRoot.Nodes.Count - 1);
+                SelectNode(FieldsTreeRoot.Nodes[index]);
+            }
+        }
+
+        private void SelectNode(string key)
+            => SelectNode(GetNodeByKey(key));
+
+        private void SelectNode(TreeNode node)
+        {
+            fieldsTree.SelectedNode = node;
+            fieldsTree.Select();
+            fieldsTree.Refresh();
+        }
+
+        private TreeNode GetNodeByKey(string key)
+            => fieldsTree.Nodes.Find(key, true)[0];
     }
 }
