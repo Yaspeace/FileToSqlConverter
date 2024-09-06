@@ -19,7 +19,7 @@
         public string GetFieldValue(string[] data)
         {
             string res = data[DataIndex];
-            if (Quotes) res = $"'{res}'";
+            if (Quotes) res = $"'{res.Replace("'", "''")}'";
             return res;
         }
     }

@@ -4,7 +4,7 @@ namespace ExcelToSqlConverter.Models.Files
 {
     public class OpenOffiseExcelFileAdapter : IFileAdapter
     {
-        public bool End => curRow == ws.Dimension.End.Row;
+        public bool End => curRow > ws.Dimension.End.Row;
 
         private readonly ExcelPackage pack;
         private readonly ExcelWorksheet ws;
