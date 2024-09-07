@@ -1,4 +1,4 @@
-﻿namespace ExcelToSqlConverter.Models
+﻿namespace ExcelToSqlConverter.Models.Fields
 {
     public interface IFieldOptions
     {

@@ -1,23 +1,25 @@
-﻿namespace ExcelToSqlConverter.Models
+﻿namespace ExcelToSqlConverter.Models.Fields
 {
-    public class GuidField : IFieldOptions
+    public class FieldOptions : IFieldOptions
     {
         public string Header { get; set; } = "";
         public bool Quotes { get; set; }
+        public int DataIndex { get; set; }
 
         public OptionsTypeEnum Type => OptionsTypeEnum.Field;
 
         public ICollection<IFieldOptions> Fields => new IFieldOptions[0];
 
-        public GuidField(string header)
+        public FieldOptions(string header, int index)
         {
             Header = header;
+            DataIndex = index;
         }
 
         public string GetFieldValue(string[] data)
         {
-            var res = Guid.NewGuid().ToString();
-            if (Quotes) res = $"'{res}'";
+            string res = data[DataIndex];
+            if (Quotes) res = $"'{res.Replace("'", "''")}'";
             return res;
         }
     }

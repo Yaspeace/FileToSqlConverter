@@ -1,53 +1,55 @@
 ﻿using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Files;
 using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Models.Export;
+using ExcelToSqlConverter.Models.Fields;
 
 namespace ExcelToSqlConverter.Controllers
 {
-    public class MainController : IDisposable
+    public class MainController : IFieldsToFileHandler, IDisposable
     {
-        public List<IFieldOptions> Fields { get; set; } = new();
+        public List<IFieldOptions> Fields { get; private set; }
 
-        private string[] Headers => Fields?.Select(x => x.Header).ToArray() ?? Array.Empty<string>();
+        public IFileAdapter Adapter { get; private set; }
 
         private readonly GuidField guidField = new("Guid");
 
-        private string[]? cachedData;
+        private readonly IExporter exporter;
 
-        private IFileAdapter? adapter;
-
-        private bool headersLine;
-
-        public void ImportCsv(string filename, char splitter, bool headersLine)
-            => SetAdapterAndImport(new CsvFileAdapter(filename, splitter), headersLine);
-
-        public void ImportExcel(string filename, string listName, bool headersLine)
-            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, listName), headersLine);
-
-        public void ImportExcelDefault(string filename, bool headersLine)
-            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename), headersLine);
-
-        private void SetAdapterAndImport(IFileAdapter adapter, bool headersLine)
+        public MainController()
         {
-            this.adapter = adapter;
-            ImportFile(headersLine);
+            Adapter = new NullAdapter();
+            Fields = new();
+            exporter = new ValuesExporter(this);
         }
 
-        private void ImportFile(bool headersLine)
+        public void ImportCsv(string filename, char splitter, bool headersLine)
+            => SetAdapterAndImport(new CsvFileAdapter(filename, splitter, headersLine));
+
+        public void ImportExcel(string filename, string listName, bool headersLine)
+            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, headersLine, listName));
+
+        public void ImportExcelDefault(string filename, bool headersLine)
+            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, headersLine));
+
+        private void SetAdapterAndImport(IFileAdapter adapter)
         {
-            if (adapter is null) throw new ArgumentNullException(nameof(adapter));
+            Adapter = adapter;
+            ImportFile();
+        }
 
+        private void ImportFile()
+        {
             Fields.Clear();
-            this.headersLine = headersLine;
 
-            var data = adapter.Read() ?? Array.Empty<string>();
+            var (headers, data) = Adapter.ResetAndReadHeadersAndData();
+            if (data is null) return;
+
             for (int i = 0; i < data.Length; i++)
             {
-                var header = headersLine ? data[i] : $"Header{i}";
+                var header = headers is null ? $"Header{i}" : headers[i];
                 Fields.Add(new FieldOptions(header, i));
             }
-
-            cachedData = headersLine ? adapter.Read() : data;
         }
 
         public void AddUnion(string header, string splitter)
@@ -113,51 +115,17 @@ namespace ExcelToSqlConverter.Controllers
         }
 
         public string GetExampleString()
-        {
-            if (cachedData == null) return "";
-
-            var res = RecordFromData(cachedData);
-            var headersStr = string.Join(',', Headers);
-            return $"{res} as source({headersStr})";
-        }
-
-        private string RecordFromData(string[] data)
-        {
-            var fieldValuesArr = Fields.Select(x => x.GetFieldValue(data)).ToArray();
-            var fieldValues = string.Join(',', fieldValuesArr);
-
-            return $"({fieldValues})";
-        }
+            => exporter.GetExample();
 
         public void ExportFile(string to)
         {
-            if (adapter == null) throw new ArgumentNullException(nameof(adapter));
-            adapter.Reset();
-
             using var sw = new StreamWriter(to);
-
-            var data = adapter.Read();
-            if (headersLine) data = adapter.Read();
-
-            if (data is null) return;
-
-            sw.Write($"(values\n\t{RecordFromData(data)}");
-
-            while (!adapter.End)
-            {
-                data = adapter.Read();
-                if (data == null) break;
-
-                sw.Write($",\n\t{RecordFromData(data)}");
-            }
-
-            var headers = string.Join(',', Headers);
-            sw.Write($"\n) as source({headers})");
+            exporter.Export(sw);
         }
 
         public void Dispose()
         {
-            adapter?.Dispose();
+            Adapter.Dispose();
         }
     }
 }

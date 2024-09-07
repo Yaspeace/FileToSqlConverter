@@ -6,20 +6,19 @@ namespace ExcelToSqlConverter.Models.Files
     {
         public bool End => curRow > ws.Dimension.End.Row;
 
+        public bool HeadersLine { get; private set; }
+
         private readonly ExcelPackage pack;
         private readonly ExcelWorksheet ws;
         int curRow = 1;
 
-        public OpenOffiseExcelFileAdapter(string filename)
+        public OpenOffiseExcelFileAdapter(string filename, bool headersLine, string listName = "")
         {
             pack = new ExcelPackage(filename);
-            ws = pack.Workbook.Worksheets[0];
-        }
-
-        public OpenOffiseExcelFileAdapter(string filename, string listName)
-        {
-            pack = new ExcelPackage(filename);
-            ws = pack.Workbook.Worksheets[listName];
+            ws = string.IsNullOrEmpty(listName)
+                ? pack.Workbook.Worksheets[0]
+                : pack.Workbook.Worksheets[listName];
+            HeadersLine = headersLine;
         }
 
         public string[]? Read()
@@ -37,16 +36,39 @@ namespace ExcelToSqlConverter.Models.Files
             return res;
         }
 
-        public void Reset() => curRow = 1;
+        public void Reset()
+            => curRow = 1;
+
+        public string[]? ResetAndReadData()
+        {
+            Reset();
+            var data = Read();
+            if (HeadersLine) data = Read();
+
+            return data;
+        }
+
+        public string[]? ResetAndReadHeaders()
+        {
+            Reset();
+            return HeadersLine ? Read() : null;
+        }
+
+        public (string[]? headers, string[]? data) ResetAndReadHeadersAndData()
+        {
+            Reset();
+            var data = Read();
+            return HeadersLine
+                ? (data, Read())
+                : (null, data);
+        }
 
         public void Close()
         {
-            
+
         }
 
         public void Dispose()
-        {
-            pack.Dispose();
-        }
+            => pack.Dispose();
     }
 }

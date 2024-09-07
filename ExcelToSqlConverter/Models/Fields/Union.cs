@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ExcelToSqlConverter.Models
+namespace ExcelToSqlConverter.Models.Fields
 {
     public class Union : IFieldOptions
     {
