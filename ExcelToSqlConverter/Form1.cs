@@ -7,7 +7,7 @@ namespace ExcelToSqlConverter
     {
         private readonly MainController _controller;
 
-        private TreeNode FieldsTreeRoot => fieldsTree.Nodes[0]; 
+        private TreeNode FieldsTreeRoot => fieldsTree.Nodes[0];
 
         public Form1()
         {
@@ -94,7 +94,7 @@ namespace ExcelToSqlConverter
                         node.Nodes.Add(subnode);
                     }
                 }
-                
+
                 fieldsTree.Nodes[0].Nodes.Add(node);
             }
 
@@ -238,5 +238,13 @@ namespace ExcelToSqlConverter
 
         private TreeNode GetNodeByKey(string key)
             => fieldsTree.Nodes.Find(key, true)[0];
+
+        private void eraseBtn_Click(object sender, EventArgs e)
+        {
+            _controller.Reset();
+            SetTree();
+            RedrawExample();
+            fileNameTb.Clear();
+        }
     }
 }

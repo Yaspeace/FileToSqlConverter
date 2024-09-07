@@ -123,6 +123,12 @@ namespace ExcelToSqlConverter.Controllers
             exporter.Export(sw);
         }
 
+        public void Reset()
+        {
+            Adapter = new NullAdapter();
+            Fields.Clear();
+        }
+
         public void Dispose()
         {
             Adapter.Dispose();

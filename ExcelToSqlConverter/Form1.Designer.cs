@@ -124,6 +124,7 @@
             eraseBtn.TabIndex = 9;
             eraseBtn.Text = "Сброс";
             eraseBtn.UseVisualStyleBackColor = true;
+            eraseBtn.Click += eraseBtn_Click;
             // 
             // importCsvBtn
             // 

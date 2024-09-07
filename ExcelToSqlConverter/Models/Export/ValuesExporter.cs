@@ -37,7 +37,7 @@
             return $"{RecordFromData(data)} as source({GetHeadersString()})";
         }
 
-        public string RecordFromData(string[] data)
+        private string RecordFromData(string[] data)
         {
             var fieldValuesArr = _handler.Fields.Select(x => x.GetFieldValue(data)).ToArray();
             return $"({string.Join(',', fieldValuesArr)})";
