@@ -86,16 +86,16 @@ namespace ExcelToSqlConverter.Controllers
 
         public void SetFieldProperties(object field, string header, bool quotes)
         {
-            if (field is not IFieldOptions) return;
-            var f = field as IFieldOptions;
+            if (field is not IFieldOptions f) return;
+
             f.Header = header;
             f.Quotes = quotes;
         }
 
         public void SetUnionProperties(object union, string header, bool quotes, string splitter)
         {
-            if (union is not Union) return;
-            var u = union as Union;
+            if (union is not Union u) return;
+
             u.Header = header;
             u.Quotes = quotes;
             u.Separator = splitter;

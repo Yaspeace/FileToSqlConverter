@@ -105,6 +105,12 @@
             exportBtn.UseVisualStyleBackColor = true;
             exportBtn.Click += exportBtn_Click;
             // 
+            // openFileDialog
+            // 
+            openFileDialog.CheckFileExists = false;
+            openFileDialog.CheckPathExists = false;
+            openFileDialog.DefaultExt = "sql";
+            // 
             // guidsCb
             // 
             guidsCb.AutoSize = true;
