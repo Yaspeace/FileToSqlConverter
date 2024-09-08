@@ -28,100 +28,129 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.splitterCb = new System.Windows.Forms.ComboBox();
-            this.customSplitterCb = new System.Windows.Forms.CheckBox();
-            this.customSplitterTb = new System.Windows.Forms.TextBox();
-            this.headersLineCb = new System.Windows.Forms.CheckBox();
-            this.okBtn = new System.Windows.Forms.Button();
-            this.cancelBtn = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            label1 = new Label();
+            splitterCb = new ComboBox();
+            customSplitterCb = new CheckBox();
+            customSplitterTb = new TextBox();
+            headersLineCb = new CheckBox();
+            okBtn = new Button();
+            cancelBtn = new Button();
+            chooseFileBtn = new Button();
+            chosenFileNameLbl = new Label();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Разделитель:";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 67);
+            label1.Name = "label1";
+            label1.Size = new Size(98, 20);
+            label1.TabIndex = 0;
+            label1.Text = "Разделитель:";
             // 
             // splitterCb
             // 
-            this.splitterCb.FormattingEnabled = true;
-            this.splitterCb.Location = new System.Drawing.Point(96, 6);
-            this.splitterCb.Name = "splitterCb";
-            this.splitterCb.Size = new System.Drawing.Size(121, 23);
-            this.splitterCb.TabIndex = 1;
+            splitterCb.FormattingEnabled = true;
+            splitterCb.Location = new Point(116, 64);
+            splitterCb.Margin = new Padding(3, 4, 3, 4);
+            splitterCb.Name = "splitterCb";
+            splitterCb.Size = new Size(138, 28);
+            splitterCb.TabIndex = 1;
             // 
             // customSplitterCb
             // 
-            this.customSplitterCb.AutoSize = true;
-            this.customSplitterCb.Location = new System.Drawing.Point(12, 37);
-            this.customSplitterCb.Name = "customSplitterCb";
-            this.customSplitterCb.Size = new System.Drawing.Size(54, 19);
-            this.customSplitterCb.TabIndex = 2;
-            this.customSplitterCb.Text = "Свой";
-            this.customSplitterCb.UseVisualStyleBackColor = true;
-            this.customSplitterCb.CheckedChanged += new System.EventHandler(this.customSplitterCb_CheckedChanged);
+            customSplitterCb.AutoSize = true;
+            customSplitterCb.Location = new Point(44, 102);
+            customSplitterCb.Margin = new Padding(3, 4, 3, 4);
+            customSplitterCb.Name = "customSplitterCb";
+            customSplitterCb.Size = new Size(66, 24);
+            customSplitterCb.TabIndex = 2;
+            customSplitterCb.Text = "Свой";
+            customSplitterCb.UseVisualStyleBackColor = true;
+            customSplitterCb.CheckedChanged += customSplitterCb_CheckedChanged;
             // 
             // customSplitterTb
             // 
-            this.customSplitterTb.Location = new System.Drawing.Point(72, 35);
-            this.customSplitterTb.Name = "customSplitterTb";
-            this.customSplitterTb.Size = new System.Drawing.Size(145, 23);
-            this.customSplitterTb.TabIndex = 3;
-            this.customSplitterTb.Visible = false;
+            customSplitterTb.Location = new Point(116, 100);
+            customSplitterTb.Margin = new Padding(3, 4, 3, 4);
+            customSplitterTb.Name = "customSplitterTb";
+            customSplitterTb.Size = new Size(165, 27);
+            customSplitterTb.TabIndex = 3;
+            customSplitterTb.Visible = false;
             // 
             // headersLineCb
             // 
-            this.headersLineCb.AutoSize = true;
-            this.headersLineCb.Location = new System.Drawing.Point(12, 75);
-            this.headersLineCb.Name = "headersLineCb";
-            this.headersLineCb.Size = new System.Drawing.Size(171, 19);
-            this.headersLineCb.TabIndex = 4;
-            this.headersLineCb.Text = "Первая строка заголовков";
-            this.headersLineCb.UseVisualStyleBackColor = true;
+            headersLineCb.AutoSize = true;
+            headersLineCb.Location = new Point(12, 144);
+            headersLineCb.Margin = new Padding(3, 4, 3, 4);
+            headersLineCb.Name = "headersLineCb";
+            headersLineCb.Size = new Size(216, 24);
+            headersLineCb.TabIndex = 4;
+            headersLineCb.Text = "Первая строка заголовков";
+            headersLineCb.UseVisualStyleBackColor = true;
             // 
             // okBtn
             // 
-            this.okBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okBtn.Location = new System.Drawing.Point(142, 115);
-            this.okBtn.Name = "okBtn";
-            this.okBtn.Size = new System.Drawing.Size(75, 23);
-            this.okBtn.TabIndex = 5;
-            this.okBtn.Text = "ОК";
-            this.okBtn.UseVisualStyleBackColor = true;
-            this.okBtn.Click += new System.EventHandler(this.CloseFormEvent);
+            okBtn.DialogResult = DialogResult.OK;
+            okBtn.Location = new Point(272, 193);
+            okBtn.Margin = new Padding(3, 4, 3, 4);
+            okBtn.Name = "okBtn";
+            okBtn.Size = new Size(86, 31);
+            okBtn.TabIndex = 5;
+            okBtn.Text = "ОК";
+            okBtn.UseVisualStyleBackColor = true;
+            okBtn.Click += CloseFormEvent;
             // 
             // cancelBtn
             // 
-            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBtn.Location = new System.Drawing.Point(12, 115);
-            this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
-            this.cancelBtn.TabIndex = 6;
-            this.cancelBtn.Text = "Отмена";
-            this.cancelBtn.UseVisualStyleBackColor = true;
-            this.cancelBtn.Click += new System.EventHandler(this.CloseFormEvent);
+            cancelBtn.DialogResult = DialogResult.Cancel;
+            cancelBtn.Location = new Point(364, 193);
+            cancelBtn.Margin = new Padding(3, 4, 3, 4);
+            cancelBtn.Name = "cancelBtn";
+            cancelBtn.Size = new Size(86, 31);
+            cancelBtn.TabIndex = 6;
+            cancelBtn.Text = "Отмена";
+            cancelBtn.UseVisualStyleBackColor = true;
+            cancelBtn.Click += CloseFormEvent;
+            // 
+            // chooseFileBtn
+            // 
+            chooseFileBtn.Location = new Point(12, 12);
+            chooseFileBtn.Name = "chooseFileBtn";
+            chooseFileBtn.Size = new Size(125, 29);
+            chooseFileBtn.TabIndex = 7;
+            chooseFileBtn.Text = "Выбрать файл";
+            chooseFileBtn.UseVisualStyleBackColor = true;
+            chooseFileBtn.Click += chooseFileBtn_Click;
+            // 
+            // chosenFileNameLbl
+            // 
+            chosenFileNameLbl.AutoEllipsis = true;
+            chosenFileNameLbl.Location = new Point(143, 16);
+            chosenFileNameLbl.Name = "chosenFileNameLbl";
+            chosenFileNameLbl.Size = new Size(307, 20);
+            chosenFileNameLbl.TabIndex = 8;
+            chosenFileNameLbl.Text = "label2";
             // 
             // CsvImportForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(227, 150);
-            this.Controls.Add(this.cancelBtn);
-            this.Controls.Add(this.okBtn);
-            this.Controls.Add(this.headersLineCb);
-            this.Controls.Add(this.customSplitterTb);
-            this.Controls.Add(this.customSplitterCb);
-            this.Controls.Add(this.splitterCb);
-            this.Controls.Add(this.label1);
-            this.Name = "CsvImportForm";
-            this.Text = "CsvImportForm";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(462, 237);
+            Controls.Add(chosenFileNameLbl);
+            Controls.Add(chooseFileBtn);
+            Controls.Add(cancelBtn);
+            Controls.Add(okBtn);
+            Controls.Add(headersLineCb);
+            Controls.Add(customSplitterTb);
+            Controls.Add(customSplitterCb);
+            Controls.Add(splitterCb);
+            Controls.Add(label1);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "CsvImportForm";
+            Text = "CsvImportForm";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -133,5 +162,7 @@
         private CheckBox headersLineCb;
         private Button okBtn;
         private Button cancelBtn;
+        private Button chooseFileBtn;
+        private Label chosenFileNameLbl;
     }
 }
