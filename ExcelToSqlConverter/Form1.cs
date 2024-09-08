@@ -44,14 +44,14 @@ namespace ExcelToSqlConverter
         private void RedrawExample()
         {
             exampleLbl.Text = _controller.GetExampleString();
+            if (string.IsNullOrEmpty(exampleLbl.Text)) return;
 
-            float maxSize = 20.0f;
-            exampleLbl.Font = new Font(exampleLbl.Font.FontFamily, maxSize, exampleLbl.Font.Style);
+            var maxSize = 20.0f;
+            exampleLbl.Font = new(exampleLbl.Font.FontFamily, maxSize, exampleLbl.Font.Style);
             var mult = (exampleLbl.Height / exampleLbl.Font.Height) + 1;
-            while (exampleLbl.Width * mult < TextRenderer.MeasureText(exampleLbl.Text,
-             new Font(exampleLbl.Font.FontFamily, exampleLbl.Font.Size, exampleLbl.Font.Style)).Width)
+            while (exampleLbl.Width * mult < TextRenderer.MeasureText(exampleLbl.Text, exampleLbl.Font).Width)
             {
-                exampleLbl.Font = new Font(exampleLbl.Font.FontFamily, exampleLbl.Font.Size - 0.5f, exampleLbl.Font.Style);
+                exampleLbl.Font = new(exampleLbl.Font.FontFamily, exampleLbl.Font.Size - 0.5f, exampleLbl.Font.Style);
                 mult = (exampleLbl.Height / exampleLbl.Font.Height) + 1;
             }
         }
@@ -104,8 +104,7 @@ namespace ExcelToSqlConverter
                 targetNode.Tag is IFieldOptions target && target != null)
             {
                 _controller.ReplaceFieldTo(field, target);
-                SetTree();
-                RedrawExample();
+                RefreshView();
             }
         }
 
@@ -122,8 +121,7 @@ namespace ExcelToSqlConverter
         private void addBtn_Click(object sender, EventArgs e)
         {
             _controller.AddUnion("TestHeader", " ");
-            SetTree();
-            RedrawExample();
+            RefreshView();
         }
 
         private void deleteBtn_Click(object sender, EventArgs e)
@@ -163,8 +161,7 @@ namespace ExcelToSqlConverter
                 _controller.SetFieldProperties(e.Node.Tag, form.Header, form.Quotes);
             }
 
-            SetTree();
-            RedrawExample();
+            RefreshView();
         }
 
         private void upBtn_Click(object sender, EventArgs e)
@@ -240,6 +237,7 @@ namespace ExcelToSqlConverter
         {
             _controller.Reset();
             guidToolStripMenuItem.Checked = false;
+            fileNameLbl.Text = string.Empty;
         }
 
         private void RefreshView()
