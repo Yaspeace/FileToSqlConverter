@@ -25,10 +25,10 @@ namespace ExcelToSqlConverter
 
         private void parseBtn_Click(object sender, EventArgs e)
         {
-            var form = new CsvImportForm();
+            var form = new CsvImportForm(openFileDialog);
             if (form.ShowDialog() != DialogResult.OK) return;
 
-            _controller.ImportCsv(fileNameTb.Text, form.Splitter, form.HeadersLine);
+            _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
             _controller.SetGuidField(guidsCb.Checked);
 
             SetTree();

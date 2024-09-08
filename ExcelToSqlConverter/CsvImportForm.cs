@@ -1,43 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace ExcelToSqlConverter
+﻿namespace ExcelToSqlConverter
 {
     public partial class CsvImportForm : Form
     {
         public char Splitter
-        {
-            get
-            {
-                if (customSplitterCb.Checked) return customSplitterTb.Text[0];
-                else return splitters.First(x => x.name == splitterCb.Text).ch;
-            }
-        }
+            => customSplitterCb.Checked ? customSplitterTb.Text[0] : splitters[splitterCb.Text];
 
-        public bool HeadersLine => headersLineCb.Checked;
+        public bool HeadersLine
+            => headersLineCb.Checked;
 
-        readonly (string name, char ch)[] splitters = new (string, char)[]
+        public string FileName
+            => _fileDialog.FileName;
+
+        private readonly Dictionary<string, char> splitters = new()
         {
-            ("Запятая", ','),
-            ("Точка", '.'),
-            ("Табуляция", '\t'),
-            ("Пробел", ' '),
-            ("Доллар", '$'),
-            ("Двоеточие", ':'),
-            ("Точка с запятой", ';')
+            {"Запятая", ',' },
+            {"Точка", '.' },
+            {"Табуляция", '\t'},
+            {"Пробел", ' '},
+            {"Доллар", '$'},
+            {"Двоеточие", ':'},
+            { "Точка с запятой", ';'}
         };
 
-        public CsvImportForm()
+        private readonly OpenFileDialog _fileDialog;
+
+        public CsvImportForm(OpenFileDialog fileDialog)
         {
             InitializeComponent();
-            splitterCb.Items.AddRange(splitters.Select(x => x.name).ToArray());
+
+            _fileDialog = fileDialog;
+
+            chosenFileNameLbl.Text = string.IsNullOrEmpty(_fileDialog.FileName)
+                ? "Файл не выбран!"
+                : _fileDialog.FileName;
+
+            splitterCb.Items.AddRange(splitters.Keys.ToArray());
             splitterCb.SelectedIndex = 0;
         }
 
@@ -50,6 +47,13 @@ namespace ExcelToSqlConverter
         private void CloseFormEvent(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void chooseFileBtn_Click(object sender, EventArgs e)
+        {
+            if (_fileDialog.ShowDialog() != DialogResult.OK) return;
+
+            chosenFileNameLbl.Text = _fileDialog.FileName;
         }
     }
 }
