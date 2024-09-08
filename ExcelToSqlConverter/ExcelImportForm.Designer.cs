@@ -28,103 +28,131 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.listTb = new System.Windows.Forms.TextBox();
-            this.headersCb = new System.Windows.Forms.CheckBox();
-            this.okBtn = new System.Windows.Forms.Button();
-            this.cancelBtn = new System.Windows.Forms.Button();
-            this.defaultListCb = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            label1 = new Label();
+            listTb = new TextBox();
+            headersCb = new CheckBox();
+            okBtn = new Button();
+            cancelBtn = new Button();
+            defaultListCb = new CheckBox();
+            label2 = new Label();
+            chooseFileBtn = new Button();
+            fileNameLbl = new Label();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(36, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Лист:";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 55);
+            label1.Name = "label1";
+            label1.Size = new Size(44, 20);
+            label1.TabIndex = 0;
+            label1.Text = "Лист:";
             // 
             // listTb
             // 
-            this.listTb.Enabled = false;
-            this.listTb.Location = new System.Drawing.Point(86, 33);
-            this.listTb.Name = "listTb";
-            this.listTb.Size = new System.Drawing.Size(171, 23);
-            this.listTb.TabIndex = 1;
+            listTb.Enabled = false;
+            listTb.Location = new Point(96, 87);
+            listTb.Margin = new Padding(3, 4, 3, 4);
+            listTb.Name = "listTb";
+            listTb.Size = new Size(195, 27);
+            listTb.TabIndex = 1;
             // 
             // headersCb
             // 
-            this.headersCb.AutoSize = true;
-            this.headersCb.Location = new System.Drawing.Point(12, 72);
-            this.headersCb.Name = "headersCb";
-            this.headersCb.Size = new System.Drawing.Size(171, 19);
-            this.headersCb.TabIndex = 2;
-            this.headersCb.Text = "Первая строка заголовков";
-            this.headersCb.UseVisualStyleBackColor = true;
+            headersCb.AutoSize = true;
+            headersCb.Location = new Point(12, 139);
+            headersCb.Margin = new Padding(3, 4, 3, 4);
+            headersCb.Name = "headersCb";
+            headersCb.Size = new Size(216, 24);
+            headersCb.TabIndex = 2;
+            headersCb.Text = "Первая строка заголовков";
+            headersCb.UseVisualStyleBackColor = true;
             // 
             // okBtn
             // 
-            this.okBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okBtn.Location = new System.Drawing.Point(182, 110);
-            this.okBtn.Name = "okBtn";
-            this.okBtn.Size = new System.Drawing.Size(75, 23);
-            this.okBtn.TabIndex = 3;
-            this.okBtn.Text = "ОК";
-            this.okBtn.UseVisualStyleBackColor = true;
-            this.okBtn.Click += new System.EventHandler(this.CloseFormEvent);
+            okBtn.DialogResult = DialogResult.OK;
+            okBtn.Location = new Point(334, 190);
+            okBtn.Margin = new Padding(3, 4, 3, 4);
+            okBtn.Name = "okBtn";
+            okBtn.Size = new Size(86, 31);
+            okBtn.TabIndex = 3;
+            okBtn.Text = "ОК";
+            okBtn.UseVisualStyleBackColor = true;
+            okBtn.Click += CloseFormEvent;
             // 
             // cancelBtn
             // 
-            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBtn.Location = new System.Drawing.Point(101, 110);
-            this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
-            this.cancelBtn.TabIndex = 4;
-            this.cancelBtn.Text = "Отмена";
-            this.cancelBtn.UseVisualStyleBackColor = true;
-            this.cancelBtn.Click += new System.EventHandler(this.CloseFormEvent);
+            cancelBtn.DialogResult = DialogResult.Cancel;
+            cancelBtn.Location = new Point(426, 190);
+            cancelBtn.Margin = new Padding(3, 4, 3, 4);
+            cancelBtn.Name = "cancelBtn";
+            cancelBtn.Size = new Size(86, 31);
+            cancelBtn.TabIndex = 4;
+            cancelBtn.Text = "Отмена";
+            cancelBtn.UseVisualStyleBackColor = true;
+            cancelBtn.Click += CloseFormEvent;
             // 
             // defaultListCb
             // 
-            this.defaultListCb.AutoSize = true;
-            this.defaultListCb.Checked = true;
-            this.defaultListCb.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.defaultListCb.Location = new System.Drawing.Point(54, 8);
-            this.defaultListCb.Name = "defaultListCb";
-            this.defaultListCb.Size = new System.Drawing.Size(113, 19);
-            this.defaultListCb.TabIndex = 5;
-            this.defaultListCb.Text = "По-умолчанию";
-            this.defaultListCb.UseVisualStyleBackColor = true;
-            this.defaultListCb.CheckedChanged += new System.EventHandler(this.defaultListCb_CheckedChanged);
+            defaultListCb.AutoSize = true;
+            defaultListCb.Checked = true;
+            defaultListCb.CheckState = CheckState.Checked;
+            defaultListCb.Location = new Point(60, 54);
+            defaultListCb.Margin = new Padding(3, 4, 3, 4);
+            defaultListCb.Name = "defaultListCb";
+            defaultListCb.Size = new Size(138, 24);
+            defaultListCb.TabIndex = 5;
+            defaultListCb.Text = "По-умолчанию";
+            defaultListCb.UseVisualStyleBackColor = true;
+            defaultListCb.CheckedChanged += defaultListCb_CheckedChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(68, 15);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Имя листа:";
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 91);
+            label2.Name = "label2";
+            label2.Size = new Size(84, 20);
+            label2.TabIndex = 6;
+            label2.Text = "Имя листа:";
+            // 
+            // chooseFileBtn
+            // 
+            chooseFileBtn.Location = new Point(12, 12);
+            chooseFileBtn.Name = "chooseFileBtn";
+            chooseFileBtn.Size = new Size(130, 29);
+            chooseFileBtn.TabIndex = 7;
+            chooseFileBtn.Text = "Выбрать файл";
+            chooseFileBtn.UseVisualStyleBackColor = true;
+            chooseFileBtn.Click += chooseFileBtn_Click;
+            // 
+            // fileNameLbl
+            // 
+            fileNameLbl.AutoEllipsis = true;
+            fileNameLbl.Location = new Point(148, 16);
+            fileNameLbl.Name = "fileNameLbl";
+            fileNameLbl.Size = new Size(364, 25);
+            fileNameLbl.TabIndex = 8;
+            fileNameLbl.Text = "label3";
             // 
             // ExcelImportForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(264, 145);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.defaultListCb);
-            this.Controls.Add(this.cancelBtn);
-            this.Controls.Add(this.okBtn);
-            this.Controls.Add(this.headersCb);
-            this.Controls.Add(this.listTb);
-            this.Controls.Add(this.label1);
-            this.Name = "ExcelImportForm";
-            this.Text = "ExcelImportForm";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(524, 234);
+            Controls.Add(fileNameLbl);
+            Controls.Add(chooseFileBtn);
+            Controls.Add(label2);
+            Controls.Add(defaultListCb);
+            Controls.Add(cancelBtn);
+            Controls.Add(okBtn);
+            Controls.Add(headersCb);
+            Controls.Add(listTb);
+            Controls.Add(label1);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "ExcelImportForm";
+            Text = "ExcelImportForm";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -136,5 +164,7 @@
         private Button cancelBtn;
         private CheckBox defaultListCb;
         private Label label2;
+        private Button chooseFileBtn;
+        private Label fileNameLbl;
     }
 }

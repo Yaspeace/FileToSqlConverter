@@ -7,7 +7,8 @@ namespace ExcelToSqlConverter
     {
         private readonly MainController _controller;
 
-        private TreeNode FieldsTreeRoot => fieldsTree.Nodes[0];
+        private TreeNode FieldsTreeRoot
+            => fieldsTree.Nodes[0];
 
         public Form1()
         {
@@ -15,40 +16,29 @@ namespace ExcelToSqlConverter
             _controller = new MainController();
         }
 
-        private void chooseFileBtn_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                fileNameTb.Text = openFileDialog.FileName;
-            }
-        }
-
-        private void parseBtn_Click(object sender, EventArgs e)
+        private void ImportCsv(object sender, EventArgs e)
         {
             var form = new CsvImportForm(openFileDialog);
             if (form.ShowDialog() != DialogResult.OK) return;
 
+            Reset();
             _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
-            _controller.SetGuidField(guidsCb.Checked);
-
-            SetTree();
-            RedrawExample();
+            fileNameLbl.Text = form.FileName;
+            RefreshView();
         }
 
-        private void importExcelBtn_Click(object sender, EventArgs e)
+        private void ImportExcel(object sender, EventArgs e)
         {
-            var form = new ExcelImportForm();
+            var form = new ExcelImportForm(openFileDialog);
             if (form.ShowDialog() != DialogResult.OK) return;
 
+            Reset();
             if (form.DefaultList)
-                _controller.ImportExcelDefault(fileNameTb.Text, form.HeadersLine);
+                _controller.ImportExcelDefault(form.FileName, form.HeadersLine);
             else
-                _controller.ImportExcel(fileNameTb.Text, form.ListName, form.HeadersLine);
-
-            _controller.SetGuidField(guidsCb.Checked);
-
-            SetTree();
-            RedrawExample();
+                _controller.ImportExcel(form.FileName, form.ListName, form.HeadersLine);
+            fileNameLbl.Text = form.FileName;
+            RefreshView();
         }
 
         private void RedrawExample()
@@ -99,13 +89,6 @@ namespace ExcelToSqlConverter
             }
 
             fieldsTree.Refresh();
-        }
-
-        private void guidsCb_CheckedChanged(object sender, EventArgs e)
-        {
-            _controller.SetGuidField(guidsCb.Checked);
-            SetTree();
-            RedrawExample();
         }
 
         private void fieldsTree_DragDrop(object sender, DragEventArgs e)
@@ -239,12 +222,30 @@ namespace ExcelToSqlConverter
         private TreeNode GetNodeByKey(string key)
             => fieldsTree.Nodes.Find(key, true)[0];
 
-        private void eraseBtn_Click(object sender, EventArgs e)
+        private void guidToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem item) return;
+
+            _controller.SetGuidField(item.Checked);
+            RefreshView();
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Reset();
+            RefreshView();
+        }
+
+        private void Reset()
         {
             _controller.Reset();
+            guidToolStripMenuItem.Checked = false;
+        }
+
+        private void RefreshView()
+        {
             SetTree();
             RedrawExample();
-            fileNameTb.Clear();
         }
     }
 }
