@@ -3,7 +3,8 @@
     public class GuidField : IFieldOptions
     {
         public string Header { get; set; } = "";
-        public bool Quotes { get; set; }
+
+        public bool Quotes { get; set; } = true;
 
         public OptionsTypeEnum Type => OptionsTypeEnum.Field;
 

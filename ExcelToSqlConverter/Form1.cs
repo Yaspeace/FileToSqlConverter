@@ -112,7 +112,7 @@ namespace ExcelToSqlConverter
 
         private void addBtn_Click(object sender, EventArgs e)
         {
-            _controller.AddUnion("TestHeader", " ");
+            _controller.AddUnion();
             RefreshView();
         }
 
