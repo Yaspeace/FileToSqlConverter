@@ -52,15 +52,21 @@
             справкаToolStripMenuItem = new ToolStripMenuItem();
             оПрограммеToolStripMenuItem = new ToolStripMenuItem();
             fileNameLbl = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            panel1 = new Panel();
+            panel2 = new Panel();
             label1 = new Label();
             label2 = new Label();
             menuStrip1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(13, 38);
+            label1.Location = new Point(3, 0);
             label1.Name = "label1";
             label1.Size = new Size(111, 20);
             label1.TabIndex = 1;
@@ -69,7 +75,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 406);
+            label2.Location = new Point(3, 0);
             label2.Name = "label2";
             label2.Size = new Size(66, 20);
             label2.TabIndex = 3;
@@ -78,16 +84,18 @@
             // exampleLbl
             // 
             exampleLbl.BorderStyle = BorderStyle.FixedSingle;
+            exampleLbl.Dock = DockStyle.Bottom;
             exampleLbl.Font = new Font("Segoe UI", 2F, FontStyle.Regular, GraphicsUnit.Point);
-            exampleLbl.Location = new Point(13, 426);
+            exampleLbl.Location = new Point(0, 20);
             exampleLbl.Name = "exampleLbl";
-            exampleLbl.Size = new Size(887, 113);
+            exampleLbl.Size = new Size(908, 137);
             exampleLbl.TabIndex = 4;
             exampleLbl.Text = "(),";
             // 
             // exportBtn
             // 
-            exportBtn.Location = new Point(779, 543);
+            exportBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            exportBtn.Location = new Point(790, 519);
             exportBtn.Margin = new Padding(3, 4, 3, 4);
             exportBtn.Name = "exportBtn";
             exportBtn.Size = new Size(121, 51);
@@ -105,13 +113,15 @@
             // fieldsTree
             // 
             fieldsTree.AllowDrop = true;
-            fieldsTree.Location = new Point(12, 99);
+            tableLayoutPanel1.SetColumnSpan(fieldsTree, 2);
+            fieldsTree.Dock = DockStyle.Fill;
+            fieldsTree.Location = new Point(3, 29);
             fieldsTree.Margin = new Padding(3, 4, 3, 4);
             fieldsTree.Name = "fieldsTree";
             treeNode1.Name = "rootNode";
             treeNode1.Text = "Все поля";
             fieldsTree.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            fieldsTree.Size = new Size(465, 303);
+            fieldsTree.Size = new Size(465, 318);
             fieldsTree.TabIndex = 13;
             fieldsTree.ItemDrag += fieldsTree_ItemDrag;
             fieldsTree.NodeMouseDoubleClick += fieldsTree_NodeMouseDoubleClick;
@@ -120,7 +130,7 @@
             // 
             // upBtn
             // 
-            upBtn.Location = new Point(485, 99);
+            upBtn.Location = new Point(3, 4);
             upBtn.Margin = new Padding(3, 4, 3, 4);
             upBtn.Name = "upBtn";
             upBtn.Size = new Size(86, 31);
@@ -131,7 +141,7 @@
             // 
             // downBtn
             // 
-            downBtn.Location = new Point(485, 138);
+            downBtn.Location = new Point(3, 43);
             downBtn.Margin = new Padding(3, 4, 3, 4);
             downBtn.Name = "downBtn";
             downBtn.Size = new Size(86, 31);
@@ -142,7 +152,7 @@
             // 
             // deleteBtn
             // 
-            deleteBtn.Location = new Point(483, 177);
+            deleteBtn.Location = new Point(3, 121);
             deleteBtn.Margin = new Padding(3, 4, 3, 4);
             deleteBtn.Name = "deleteBtn";
             deleteBtn.Size = new Size(86, 31);
@@ -153,7 +163,7 @@
             // 
             // addBtn
             // 
-            addBtn.Location = new Point(483, 216);
+            addBtn.Location = new Point(3, 82);
             addBtn.Margin = new Padding(3, 4, 3, 4);
             addBtn.Name = "addBtn";
             addBtn.Size = new Size(86, 31);
@@ -248,27 +258,67 @@
             fileNameLbl.AutoEllipsis = true;
             fileNameLbl.BackColor = SystemColors.InactiveBorder;
             fileNameLbl.BorderStyle = BorderStyle.FixedSingle;
-            fileNameLbl.Location = new Point(130, 38);
+            tableLayoutPanel1.SetColumnSpan(fileNameLbl, 2);
+            fileNameLbl.Dock = DockStyle.Fill;
+            fileNameLbl.Location = new Point(120, 0);
             fileNameLbl.Name = "fileNameLbl";
-            fileNameLbl.Size = new Size(770, 25);
+            fileNameLbl.Size = new Size(791, 25);
             fileNameLbl.TabIndex = 20;
             fileNameLbl.Text = "Ничего не импортировано :'-(";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(fileNameLbl, 1, 0);
+            tableLayoutPanel1.Controls.Add(panel2, 0, 2);
+            tableLayoutPanel1.Controls.Add(panel1, 2, 1);
+            tableLayoutPanel1.Controls.Add(fieldsTree, 0, 1);
+            tableLayoutPanel1.Controls.Add(exportBtn, 2, 3);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 28);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(914, 574);
+            tableLayoutPanel1.TabIndex = 21;
+            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(upBtn);
+            panel1.Controls.Add(addBtn);
+            panel1.Controls.Add(downBtn);
+            panel1.Controls.Add(deleteBtn);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(474, 28);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(437, 320);
+            panel1.TabIndex = 21;
+            // 
+            // panel2
+            // 
+            tableLayoutPanel1.SetColumnSpan(panel2, 3);
+            panel2.Controls.Add(label2);
+            panel2.Controls.Add(exampleLbl);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(3, 354);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(908, 157);
+            panel2.TabIndex = 22;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(914, 602);
-            Controls.Add(fileNameLbl);
-            Controls.Add(addBtn);
-            Controls.Add(deleteBtn);
-            Controls.Add(downBtn);
-            Controls.Add(upBtn);
-            Controls.Add(fieldsTree);
-            Controls.Add(exportBtn);
-            Controls.Add(exampleLbl);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
@@ -277,6 +327,11 @@
             FormClosed += Form1_FormClosed;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -302,5 +357,8 @@
         private ToolStripMenuItem справкаToolStripMenuItem;
         private ToolStripMenuItem оПрограммеToolStripMenuItem;
         private Label fileNameLbl;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel2;
+        private Panel panel1;
     }
 }
