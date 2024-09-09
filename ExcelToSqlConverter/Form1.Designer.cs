@@ -73,7 +73,7 @@
             // label2
             // 
             tableLayoutPanel1.SetColumnSpan(label2, 3);
-            label2.Location = new Point(3, 285);
+            label2.Location = new Point(3, 331);
             label2.Name = "label2";
             label2.Size = new Size(52, 15);
             label2.TabIndex = 3;
@@ -85,9 +85,9 @@
             tableLayoutPanel1.SetColumnSpan(exampleLbl, 3);
             exampleLbl.Dock = DockStyle.Fill;
             exampleLbl.Font = new Font("Segoe UI", 2F, FontStyle.Regular, GraphicsUnit.Point);
-            exampleLbl.Location = new Point(3, 300);
+            exampleLbl.Location = new Point(3, 346);
             exampleLbl.Name = "exampleLbl";
-            exampleLbl.Size = new Size(954, 143);
+            exampleLbl.Size = new Size(954, 144);
             exampleLbl.TabIndex = 4;
             exampleLbl.Text = "(),";
             // 
@@ -255,13 +255,13 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(label2, 0, 2);
+            tableLayoutPanel1.Controls.Add(label2, 0, 3);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(exampleLbl, 0, 3);
+            tableLayoutPanel1.Controls.Add(exampleLbl, 0, 4);
             tableLayoutPanel1.Controls.Add(fileNameLbl, 1, 0);
             tableLayoutPanel1.Controls.Add(panel1, 2, 1);
             tableLayoutPanel1.Controls.Add(fieldsTree, 0, 1);
-            tableLayoutPanel1.Controls.Add(exportBtn, 2, 4);
+            tableLayoutPanel1.Controls.Add(exportBtn, 1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 24);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -270,8 +270,8 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 65F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 35F));
             tableLayoutPanel1.Size = new Size(960, 490);
             tableLayoutPanel1.TabIndex = 21;
             // 
@@ -291,7 +291,7 @@
             // exportBtn
             // 
             exportBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            exportBtn.Location = new Point(851, 447);
+            exportBtn.Location = new Point(421, 288);
             exportBtn.Name = "exportBtn";
             exportBtn.Size = new Size(106, 40);
             exportBtn.TabIndex = 6;

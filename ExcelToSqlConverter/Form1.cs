@@ -1,4 +1,5 @@
 using ExcelToSqlConverter.Controllers;
+using ExcelToSqlConverter.Extensions;
 using ExcelToSqlConverter.Models.Fields;
 
 namespace ExcelToSqlConverter
@@ -44,16 +45,7 @@ namespace ExcelToSqlConverter
         private void RedrawExample()
         {
             exampleLbl.Text = _controller.GetExampleString();
-            if (string.IsNullOrEmpty(exampleLbl.Text)) return;
-
-            var maxSize = 20.0f;
-            exampleLbl.Font = new(exampleLbl.Font.FontFamily, maxSize, exampleLbl.Font.Style);
-            var mult = (exampleLbl.Height / exampleLbl.Font.Height) + 1;
-            while (exampleLbl.Width * mult < TextRenderer.MeasureText(exampleLbl.Text, exampleLbl.Font).Width)
-            {
-                exampleLbl.Font = new(exampleLbl.Font.FontFamily, exampleLbl.Font.Size - 0.5f, exampleLbl.Font.Style);
-                mult = (exampleLbl.Height / exampleLbl.Font.Height) + 1;
-            }
+            exampleLbl.FitFontSize(20f);
         }
 
         private void SetTree()
