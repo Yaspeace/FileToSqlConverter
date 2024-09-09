@@ -16,6 +16,8 @@ namespace ExcelToSqlConverter.Controllers
 
         private readonly IExporter exporter;
 
+        private int _unionCounter = 1;
+
         public MainController()
         {
             Adapter = new NullAdapter();
@@ -52,8 +54,8 @@ namespace ExcelToSqlConverter.Controllers
             }
         }
 
-        public void AddUnion(string header, string splitter)
-            => Fields.Add(new Union(header, splitter));
+        public void AddUnion()
+            => Fields.Add(new Union($"Union{_unionCounter++}", " "));
 
         public void ReplaceFieldTo(IFieldOptions field, IFieldOptions target)
         {
