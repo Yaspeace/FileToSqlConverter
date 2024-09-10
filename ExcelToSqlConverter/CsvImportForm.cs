@@ -1,4 +1,6 @@
-﻿namespace ExcelToSqlConverter
+﻿using ExcelToSqlConverter.Enums;
+
+namespace ExcelToSqlConverter
 {
     public partial class CsvImportForm : Form
     {
@@ -30,8 +32,9 @@
 
             _fileDialog = fileDialog;
 
+            okBtn.Enabled = !string.IsNullOrEmpty(_fileDialog.FileName);
             chosenFileNameLbl.Text = string.IsNullOrEmpty(_fileDialog.FileName)
-                ? "Файл не выбран!"
+                ? UIStrings.FileNotChosen
                 : _fileDialog.FileName;
 
             splitterCb.Items.AddRange(splitters.Keys.ToArray());
@@ -54,6 +57,7 @@
             if (_fileDialog.ShowDialog() != DialogResult.OK) return;
 
             chosenFileNameLbl.Text = _fileDialog.FileName;
+            okBtn.Enabled = true;
         }
     }
 }

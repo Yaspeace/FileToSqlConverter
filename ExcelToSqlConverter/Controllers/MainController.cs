@@ -25,33 +25,57 @@ namespace ExcelToSqlConverter.Controllers
             exporter = new ValuesExporter(this);
         }
 
-        public void ImportCsv(string filename, char splitter, bool headersLine)
-            => SetAdapterAndImport(new CsvFileAdapter(filename, splitter, headersLine));
-
-        public void ImportExcel(string filename, string listName, bool headersLine)
-            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, headersLine, listName));
-
-        public void ImportExcelDefault(string filename, bool headersLine)
-            => SetAdapterAndImport(new OpenOffiseExcelFileAdapter(filename, headersLine));
-
-        private void SetAdapterAndImport(IFileAdapter adapter)
+        public bool ImportCsv(string filename, char splitter, bool headersLine)
         {
-            Adapter = adapter;
-            ImportFile();
+            try
+            {
+                return ImportFile(new CsvFileAdapter(filename, splitter, headersLine));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        private void ImportFile()
+        public bool ImportExcel(string filename, string listName, bool headersLine)
+        {
+            try
+            {
+                return ImportFile(new OpenOffiseExcelFileAdapter(filename, headersLine, listName));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool ImportExcelDefault(string filename, bool headersLine)
+        {
+            try
+            {
+                return ImportFile(new OpenOffiseExcelFileAdapter(filename, headersLine));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool ImportFile(IFileAdapter adapter)
         {
             Fields.Clear();
+            Adapter = adapter;
 
             var (headers, data) = Adapter.ResetAndReadHeadersAndData();
-            if (data is null) return;
+            if (data is null) return false;
 
             for (int i = 0; i < data.Length; i++)
             {
                 var header = headers is null ? $"Header{i}" : headers[i];
                 Fields.Add(new FieldOptions(header, i));
             }
+
+            return true;
         }
 
         public void AddUnion()
