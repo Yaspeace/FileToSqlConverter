@@ -15,7 +15,7 @@
             Header = header;
         }
 
-        public string GetFieldValue(string[] data)
+        public string GetFieldValue(string[] data, int rowNum)
         {
             var guid = Guid.NewGuid().ToString();
             return Quotes ? $"'{guid}'" : guid;

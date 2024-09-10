@@ -110,23 +110,6 @@ namespace ExcelToSqlConverter.Controllers
                 Fields.MoveBackward(field);
         }
 
-        public void SetFieldProperties(object field, string header, bool quotes)
-        {
-            if (field is not IFieldOptions f) return;
-
-            f.Header = header;
-            f.Quotes = quotes;
-        }
-
-        public void SetUnionProperties(object union, string header, bool quotes, string splitter)
-        {
-            if (union is not Union u) return;
-
-            u.Header = header;
-            u.Quotes = quotes;
-            u.Separator = splitter;
-        }
-
         public void SetGuidField(bool enable)
         {
             if (enable)

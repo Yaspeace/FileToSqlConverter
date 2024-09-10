@@ -19,4 +19,8 @@
     <PackageReference Include="EPPlus" Version="6.2.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+
 </Project>

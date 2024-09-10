@@ -157,13 +157,13 @@ namespace ExcelToSqlConverter
             {
                 var form = new UnionForm(union);
                 if (form.ShowDialog() != DialogResult.OK) return;
-                _controller.SetUnionProperties(e.Node.Tag, form.Header, form.Quotes, form.Splitter);
+                union.SetFromProperties(form);
             }
-            else if (e.Node.Tag is IFieldOptions field && field != null)
+            else if (e.Node.Tag is FieldOptions field && field != null)
             {
                 var form = new FieldPropertiesForm(field);
                 if (form.ShowDialog() != DialogResult.OK) return;
-                _controller.SetFieldProperties(e.Node.Tag, form.Header, form.Quotes);
+                field.SetFromProperties(form);
             }
 
             RefreshView();

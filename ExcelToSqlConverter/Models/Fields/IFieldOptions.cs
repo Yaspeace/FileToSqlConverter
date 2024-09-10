@@ -10,6 +10,6 @@
 
         ICollection<IFieldOptions> Fields { get; }
 
-        string GetFieldValue(string[] data);
+        string GetFieldValue(string[] data, int rowNumber);
     }
 }
