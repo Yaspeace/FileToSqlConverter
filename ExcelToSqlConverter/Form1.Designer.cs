@@ -291,6 +291,7 @@
             // exportBtn
             // 
             exportBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            exportBtn.Enabled = false;
             exportBtn.Location = new Point(421, 288);
             exportBtn.Name = "exportBtn";
             exportBtn.Size = new Size(106, 40);

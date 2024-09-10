@@ -1,4 +1,5 @@
 using ExcelToSqlConverter.Controllers;
+using ExcelToSqlConverter.Enums;
 using ExcelToSqlConverter.Extensions;
 using ExcelToSqlConverter.Models.Fields;
 
@@ -23,8 +24,15 @@ namespace ExcelToSqlConverter
             if (form.ShowDialog() != DialogResult.OK) return;
 
             Reset();
-            _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
-            fileNameLbl.Text = form.FileName;
+
+            var imported = exportBtn.Enabled =
+                _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
+
+            if (imported)
+                fileNameLbl.Text = form.FileName;
+            else
+                ShowError("Не удалось импортировать указанный файл");
+
             RefreshView();
         }
 
@@ -34,11 +42,16 @@ namespace ExcelToSqlConverter
             if (form.ShowDialog() != DialogResult.OK) return;
 
             Reset();
-            if (form.DefaultList)
-                _controller.ImportExcelDefault(form.FileName, form.HeadersLine);
+
+            var imported = exportBtn.Enabled = form.DefaultList
+                ? _controller.ImportExcelDefault(form.FileName, form.HeadersLine)
+                : _controller.ImportExcel(form.FileName, form.ListName, form.HeadersLine);
+
+            if (imported)
+                fileNameLbl.Text = form.FileName;
             else
-                _controller.ImportExcel(form.FileName, form.ListName, form.HeadersLine);
-            fileNameLbl.Text = form.FileName;
+                ShowError("Не удалось импортировать указанный файл");
+
             RefreshView();
         }
 
@@ -229,7 +242,8 @@ namespace ExcelToSqlConverter
         {
             _controller.Reset();
             guidToolStripMenuItem.Checked = false;
-            fileNameLbl.Text = string.Empty;
+            exportBtn.Enabled = false;
+            fileNameLbl.Text = UIStrings.NothingImported;
         }
 
         private void RefreshView()
@@ -237,5 +251,8 @@ namespace ExcelToSqlConverter
             SetTree();
             RedrawExample();
         }
+
+        private static void ShowError(string message)
+            => MessageBox.Show(message, "ОШИБКА", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }
