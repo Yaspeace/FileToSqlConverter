@@ -105,6 +105,18 @@ namespace ExcelToSqlConverter.Controllers
             Fields.Remove(field);
         }
 
+        public void ReplaceFieldFrom(IFieldOptions field, IFieldOptions parent)
+        {
+            if (field.Type != OptionsTypeEnum.Field ||
+                parent.Type != OptionsTypeEnum.Union)
+            {
+                return;
+            }
+
+            Fields.Add(field);
+            parent.Fields.Remove(field);
+        }
+
         public void Remove(IFieldOptions fieldOpts)
         {
             if (fieldOpts.Type == OptionsTypeEnum.Union)

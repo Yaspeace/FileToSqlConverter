@@ -1,3 +1,4 @@
+using System.IO.Packaging;
 using ExcelToSqlConverter.Controllers;
 using ExcelToSqlConverter.Enums;
 using ExcelToSqlConverter.Extensions;
@@ -102,12 +103,30 @@ namespace ExcelToSqlConverter
             var targetPoint = fieldsTree.PointToClient(new Point(e.X, e.Y));
             var targetNode = fieldsTree.GetNodeAt(targetPoint);
 
-            if (
-                targetNode != null &&
-                e?.Data?.GetData(typeof(TreeNode)) is TreeNode draggedNode && draggedNode != null &&
-                !draggedNode.Equals(targetNode) &&
-                draggedNode.Tag is IFieldOptions field && field != null &&
-                targetNode.Tag is IFieldOptions target && target != null)
+            if (e?.Data?.GetData(typeof(TreeNode)) is not TreeNode draggedNode ||
+                draggedNode is null ||
+                draggedNode.Equals(targetNode) ||
+                draggedNode.Tag is not IFieldOptions field)
+            {
+                return;
+            }
+
+            var target = targetNode?.Tag as IFieldOptions;
+
+            if (target is null || target.Type == OptionsTypeEnum.Field)
+            {
+                if (draggedNode.Parent is null || draggedNode.Parent.Equals(FieldsTreeRoot))
+                {
+                    return;
+                }
+
+                if (draggedNode.Parent.Tag is IFieldOptions parent)
+                {
+                    _controller.ReplaceFieldFrom(field, parent);
+                    RefreshView();
+                }
+            }
+            else if (target.Type == OptionsTypeEnum.Union)
             {
                 _controller.ReplaceFieldTo(field, target);
                 RefreshView();
