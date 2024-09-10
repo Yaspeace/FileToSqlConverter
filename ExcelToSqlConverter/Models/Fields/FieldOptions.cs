@@ -49,5 +49,13 @@ namespace ExcelToSqlConverter.Models.Fields
             Replacement = props.Replacement;
             Format = props.Format;
         }
+
+        public IFieldOptions Clone(string newHeader)
+        {
+            var clone = new FieldOptions(newHeader, DataIndex, Format, Replacement);
+            clone.SetFromProperties(this);
+            clone.Header = newHeader;
+            return clone;
+        }
     }
 }

@@ -38,7 +38,6 @@
             upBtn = new Button();
             downBtn = new Button();
             deleteBtn = new Button();
-            addBtn = new Button();
             menuStrip1 = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             импортToolStripMenuItem = new ToolStripMenuItem();
@@ -46,8 +45,10 @@
             csvToolStripMenuItem = new ToolStripMenuItem();
             manualToolStripMenuItem = new ToolStripMenuItem();
             resetToolStripMenuItem = new ToolStripMenuItem();
-            средстваToolStripMenuItem = new ToolStripMenuItem();
-            guidToolStripMenuItem = new ToolStripMenuItem();
+            addToolStripMenuItem = new ToolStripMenuItem();
+            copyMenuItem = new ToolStripMenuItem();
+            guidMenuItem = new ToolStripMenuItem();
+            unionMenuItem = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
             оПрограммеToolStripMenuItem = new ToolStripMenuItem();
             fileNameLbl = new Label();
@@ -144,20 +145,10 @@
             deleteBtn.UseVisualStyleBackColor = true;
             deleteBtn.Click += deleteBtn_Click;
             // 
-            // addBtn
-            // 
-            addBtn.Location = new Point(3, 62);
-            addBtn.Name = "addBtn";
-            addBtn.Size = new Size(75, 23);
-            addBtn.TabIndex = 17;
-            addBtn.Text = "+";
-            addBtn.UseVisualStyleBackColor = true;
-            addBtn.Click += addBtn_Click;
-            // 
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, средстваToolStripMenuItem, справкаToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, addToolStripMenuItem, справкаToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(5, 2, 0, 2);
@@ -208,20 +199,34 @@
             resetToolStripMenuItem.Text = "Сброс";
             resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
             // 
-            // средстваToolStripMenuItem
+            // addToolStripMenuItem
             // 
-            средстваToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { guidToolStripMenuItem });
-            средстваToolStripMenuItem.Name = "средстваToolStripMenuItem";
-            средстваToolStripMenuItem.Size = new Size(69, 20);
-            средстваToolStripMenuItem.Text = "Средства";
+            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { copyMenuItem, guidMenuItem, unionMenuItem });
+            addToolStripMenuItem.Enabled = false;
+            addToolStripMenuItem.Name = "addToolStripMenuItem";
+            addToolStripMenuItem.Size = new Size(71, 20);
+            addToolStripMenuItem.Text = "Добавить";
             // 
-            // guidToolStripMenuItem
+            // copyMenuItem
             // 
-            guidToolStripMenuItem.CheckOnClick = true;
-            guidToolStripMenuItem.Name = "guidToolStripMenuItem";
-            guidToolStripMenuItem.Size = new Size(159, 22);
-            guidToolStripMenuItem.Text = "Столбец ГУИов";
-            guidToolStripMenuItem.Click += guidToolStripMenuItem_Click;
+            copyMenuItem.Name = "copyMenuItem";
+            copyMenuItem.Size = new Size(276, 22);
+            copyMenuItem.Text = "Скопировать выделенный столбец";
+            copyMenuItem.Click += copyMenuItem_Click;
+            // 
+            // guidMenuItem
+            // 
+            guidMenuItem.Name = "guidMenuItem";
+            guidMenuItem.Size = new Size(276, 22);
+            guidMenuItem.Text = "Столбец ГУИДов";
+            guidMenuItem.Click += guidMenuItem_Click;
+            // 
+            // unionMenuItem
+            // 
+            unionMenuItem.Name = "unionMenuItem";
+            unionMenuItem.Size = new Size(276, 22);
+            unionMenuItem.Text = "Объединение/вычислимый столбец";
+            unionMenuItem.Click += unionMenuItem_Click;
             // 
             // справкаToolStripMenuItem
             // 
@@ -278,7 +283,6 @@
             // panel1
             // 
             panel1.Controls.Add(upBtn);
-            panel1.Controls.Add(addBtn);
             panel1.Controls.Add(downBtn);
             panel1.Controls.Add(deleteBtn);
             panel1.Dock = DockStyle.Fill;
@@ -328,7 +332,6 @@
         private Button upBtn;
         private Button downBtn;
         private Button deleteBtn;
-        private Button addBtn;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem файлToolStripMenuItem;
         private ToolStripMenuItem импортToolStripMenuItem;
@@ -344,5 +347,9 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
         private Button exportBtn;
+        private ToolStripMenuItem addToolStripMenuItem;
+        private ToolStripMenuItem copyMenuItem;
+        private ToolStripMenuItem guidMenuItem;
+        private ToolStripMenuItem unionMenuItem;
     }
 }

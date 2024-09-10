@@ -25,8 +25,8 @@ namespace ExcelToSqlConverter
 
             Reset();
 
-            var imported = exportBtn.Enabled =
-                _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
+            var imported = _controller.ImportCsv(form.FileName, form.Splitter, form.HeadersLine);
+            SetImported(imported);
 
             if (imported)
                 fileNameLbl.Text = form.FileName;
@@ -43,9 +43,10 @@ namespace ExcelToSqlConverter
 
             Reset();
 
-            var imported = exportBtn.Enabled = form.DefaultList
+            var imported = form.DefaultList
                 ? _controller.ImportExcelDefault(form.FileName, form.HeadersLine)
                 : _controller.ImportExcel(form.FileName, form.ListName, form.HeadersLine);
+            SetImported(imported);
 
             if (imported)
                 fileNameLbl.Text = form.FileName;
@@ -224,26 +225,44 @@ namespace ExcelToSqlConverter
         private TreeNode GetNodeByKey(string key)
             => fieldsTree.Nodes.Find(key, true)[0];
 
-        private void guidToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is not ToolStripMenuItem item) return;
-
-            _controller.SetGuidField(item.Checked);
-            RefreshView();
-        }
-
         private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Reset();
             RefreshView();
         }
 
+        private void SetImported(bool imported)
+        {
+            exportBtn.Enabled = imported;
+            addToolStripMenuItem.Enabled = imported;
+        }
+
         private void Reset()
         {
             _controller.Reset();
-            guidToolStripMenuItem.Checked = false;
-            exportBtn.Enabled = false;
+            SetImported(false);
             fileNameLbl.Text = UIStrings.NothingImported;
+        }
+
+        private void copyMenuItem_Click(object sender, EventArgs e)
+        {
+            if (fieldsTree.SelectedNode?.Tag is IFieldOptions field && field != null)
+            {
+                _controller.CopyField(field);
+                RefreshView();
+            }
+        }
+
+        private void guidMenuItem_Click(object sender, EventArgs e)
+        {
+            _controller.AddGuidField();
+            RefreshView();
+        }
+
+        private void unionMenuItem_Click(object sender, EventArgs e)
+        {
+            _controller.AddUnion();
+            RefreshView();
         }
 
         private void RefreshView()
