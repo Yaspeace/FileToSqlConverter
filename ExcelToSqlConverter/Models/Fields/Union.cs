@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Models.Fields.Properties;
 
 namespace ExcelToSqlConverter.Models.Fields
 {
-    public class Union : IFieldOptions
+    public class Union : IFieldOptions, IUnionProperties
     {
         public string Header { get; set; } = "";
 
@@ -12,7 +13,12 @@ namespace ExcelToSqlConverter.Models.Fields
 
         public bool Quotes { get; set; }
 
-        public OptionsTypeEnum Type => OptionsTypeEnum.Union;
+        public bool FormatMode { get; set; }
+
+        public string FormatString { get; set; } = string.Empty;
+
+        public OptionsTypeEnum Type
+            => OptionsTypeEnum.Union;
 
         public Union(string header, string separator)
         {
@@ -21,19 +27,34 @@ namespace ExcelToSqlConverter.Models.Fields
             Fields = new List<IFieldOptions>();
         }
 
-        public string GetFieldValue(string[] data)
+        public string GetFieldValue(string[] data, int rowNumber)
         {
-            var sb = new StringBuilder();
-            if (Quotes) sb.Append("'");
-            var first = true;
-            foreach (var field in Fields)
-            {
-                if (!first) sb.Append(Separator);
-                sb.Append(field.GetFieldValue(data));
-                first = false;
-            }
-            if (Quotes) sb.Append("'");
-            return sb.ToString();
+            var fieldValues = Fields.Select(x => x.GetFieldValue(data, rowNumber)).ToArray();
+
+            var res = FormatMode
+                ? FormatString.CustomFormat(rowNumber, fieldValues)
+                : string.Join(Separator, fieldValues);
+
+            return Quotes
+                ? res.SqlQuotes()
+                : res;
+        }
+
+        public void SetFromProperties(IUnionProperties props)
+        {
+            Header = props.Header;
+            Separator = props.Separator;
+            Quotes = props.Quotes;
+            FormatMode = props.FormatMode;
+            FormatString = props.FormatString;
+        }
+
+        public IFieldOptions Clone(string newHeader)
+        {
+            var clone = new Union(newHeader, Separator);
+            clone.SetFromProperties(this);
+            clone.Header = newHeader;
+            return clone;
         }
     }
 }

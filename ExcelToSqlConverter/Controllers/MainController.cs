@@ -12,8 +12,6 @@ namespace ExcelToSqlConverter.Controllers
 
         public IFileAdapter Adapter { get; private set; }
 
-        private readonly GuidField guidField = new("Guid");
-
         private readonly IExporter exporter;
 
         private int _unionCounter = 1;
@@ -81,6 +79,19 @@ namespace ExcelToSqlConverter.Controllers
         public void AddUnion()
             => Fields.Add(new Union($"Union{_unionCounter++}", " "));
 
+        public void AddGuidField()
+            => Fields.Add(new FieldOptions($"Guid{_unionCounter++}", 0, "{guid}")
+            {
+                Quotes = true
+            });
+
+        public void CopyField(IFieldOptions field)
+        {
+            Fields.Insert(
+                Fields.IndexOf(field) + 1,
+                field.Clone($"{field.Header}_Копия{_unionCounter++}"));
+        }
+
         public void ReplaceFieldTo(IFieldOptions field, IFieldOptions target)
         {
             if (
@@ -110,35 +121,7 @@ namespace ExcelToSqlConverter.Controllers
                 Fields.MoveBackward(field);
         }
 
-        public void SetFieldProperties(object field, string header, bool quotes)
-        {
-            if (field is not IFieldOptions f) return;
 
-            f.Header = header;
-            f.Quotes = quotes;
-        }
-
-        public void SetUnionProperties(object union, string header, bool quotes, string splitter)
-        {
-            if (union is not Union u) return;
-
-            u.Header = header;
-            u.Quotes = quotes;
-            u.Separator = splitter;
-        }
-
-        public void SetGuidField(bool enable)
-        {
-            if (enable)
-            {
-                if (!Fields.Contains(guidField))
-                    Fields.Add(guidField);
-            }
-            else
-            {
-                Fields.Remove(guidField);
-            }
-        }
 
         public string GetExampleString()
             => exporter.GetExample();
