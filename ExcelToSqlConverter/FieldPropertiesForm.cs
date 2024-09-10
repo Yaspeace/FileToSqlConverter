@@ -1,5 +1,4 @@
 ﻿using ExcelToSqlConverter.Models;
-using ExcelToSqlConverter.Models.Fields;
 using ExcelToSqlConverter.Models.Fields.Properties;
 
 namespace ExcelToSqlConverter
