@@ -275,5 +275,10 @@ namespace ExcelToSqlConverter.Forms
                     Tag = field,
                     BackColor = field.Type == OptionsTypeEnum.Union ? Color.WhiteSmoke : Color.Empty
                 }).ToArray();
+
+        private void manualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ManualImportForm().ShowDialog();
+        }
     }
 }
