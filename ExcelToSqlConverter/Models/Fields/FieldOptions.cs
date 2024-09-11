@@ -18,8 +18,8 @@ namespace ExcelToSqlConverter.Models.Fields
         public OptionsTypeEnum Type
             => OptionsTypeEnum.Field;
 
-        public ICollection<IFieldOptions> Fields
-            => Array.Empty<IFieldOptions>();
+        public List<IFieldOptions> Fields
+            => new();
 
         public FieldOptions(string header, int index, string format = "{value}", Replacement replacement = new())
         {

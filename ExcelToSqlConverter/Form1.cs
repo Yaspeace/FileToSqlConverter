@@ -1,7 +1,7 @@
-using System.IO.Packaging;
 using ExcelToSqlConverter.Controllers;
 using ExcelToSqlConverter.Enums;
 using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Fields;
 
 namespace ExcelToSqlConverter
@@ -65,42 +65,14 @@ namespace ExcelToSqlConverter
 
         private void SetTree()
         {
-            fieldsTree.Nodes[0].Nodes.Clear();
-
-            foreach (var field in _controller.Fields)
-            {
-                var node = new TreeNode()
-                {
-                    Text = field.Header,
-                    Tag = field,
-                    Name = field.Header
-                };
-
-                if (field.Type == OptionsTypeEnum.Union)
-                {
-                    node.BackColor = Color.WhiteSmoke;
-                    foreach (var sub in field.Fields)
-                    {
-                        var subnode = new TreeNode()
-                        {
-                            Text = sub.Header,
-                            Tag = sub,
-                            Name = sub.Header
-                        };
-
-                        node.Nodes.Add(subnode);
-                    }
-                }
-
-                fieldsTree.Nodes[0].Nodes.Add(node);
-            }
-
+            FieldsTreeRoot.Nodes.Clear();
+            FieldsTreeRoot.Nodes.AddRange(SelectNodes(_controller.Fields));
             fieldsTree.Refresh();
         }
 
         private void fieldsTree_DragDrop(object sender, DragEventArgs e)
         {
-            var targetPoint = fieldsTree.PointToClient(new Point(e.X, e.Y));
+            var targetPoint = fieldsTree.PointToClient(new(e.X, e.Y));
             var targetNode = fieldsTree.GetNodeAt(targetPoint);
 
             if (e?.Data?.GetData(typeof(TreeNode)) is not TreeNode draggedNode ||
@@ -111,26 +83,20 @@ namespace ExcelToSqlConverter
                 return;
             }
 
-            var target = targetNode?.Tag as IFieldOptions;
-
-            if (target is null || target.Type == OptionsTypeEnum.Field)
+            if (targetNode is null)
             {
-                if (draggedNode.Parent is null || draggedNode.Parent.Equals(FieldsTreeRoot))
-                {
-                    return;
-                }
-
-                if (draggedNode.Parent.Tag is IFieldOptions parent)
-                {
-                    _controller.ReplaceFieldFrom(field, parent);
-                    RefreshView();
-                }
+                _controller.ReplaceField(field, GetNodeParent(draggedNode), null, null);
             }
-            else if (target.Type == OptionsTypeEnum.Union)
+            else if (targetNode == FieldsTreeRoot)
             {
-                _controller.ReplaceFieldTo(field, target);
-                RefreshView();
+                _controller.ReplaceField(field, GetNodeParent(draggedNode), null, _controller);
             }
+            else if (targetNode.Tag is IFieldOptions target)
+            {
+                _controller.ReplaceField(field, GetNodeParent(draggedNode), target, GetNodeParent(targetNode));
+            }
+
+            RefreshView(draggedNode.Name);
         }
 
         private void fieldsTree_DragEnter(object sender, DragEventArgs e)
@@ -151,14 +117,11 @@ namespace ExcelToSqlConverter
 
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-            if (fieldsTree.SelectedNode.Tag is IFieldOptions fieldOpts && fieldOpts != null)
+            if (fieldsTree.SelectedNode.Tag is IFieldOptions fieldOpts)
             {
                 var fieldIdx = fieldsTree.SelectedNode.Index;
-                _controller.Remove(fieldOpts);
-
-                SetTree();
-                SelectNode(fieldIdx);
-                RedrawExample();
+                _controller.Remove(fieldOpts, GetNodeParent(fieldsTree.SelectedNode));
+                RefreshView(fieldIdx);
             }
         }
 
@@ -194,12 +157,8 @@ namespace ExcelToSqlConverter
             if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
             {
                 var key = fieldsTree.SelectedNode.Name;
-
-                _controller.Move(field, true);
-
-                SetTree();
-                SelectNode(key);
-                RedrawExample();
+                _controller.Move(field, GetNodeParent(fieldsTree.SelectedNode), true);
+                RefreshView(key);
             }
         }
 
@@ -208,12 +167,8 @@ namespace ExcelToSqlConverter
             if (fieldsTree.SelectedNode.Tag is IFieldOptions field && field != null)
             {
                 var key = fieldsTree.SelectedNode.Name;
-
-                _controller.Move(field, false);
-
-                SetTree();
-                SelectNode(key);
-                RedrawExample();
+                _controller.Move(field, GetNodeParent(fieldsTree.SelectedNode), false);
+                RefreshView(key);
             }
         }
 
@@ -263,6 +218,9 @@ namespace ExcelToSqlConverter
             fileNameLbl.Text = UIStrings.NothingImported;
         }
 
+        private IFields GetNodeParent(TreeNode node)
+            => (node.Parent.Tag as IFields) ?? _controller;
+
         private void copyMenuItem_Click(object sender, EventArgs e)
         {
             if (fieldsTree.SelectedNode?.Tag is IFieldOptions field && field != null)
@@ -290,7 +248,31 @@ namespace ExcelToSqlConverter
             RedrawExample();
         }
 
+        private void RefreshView(string selectedNodeName)
+        {
+            SetTree();
+            SelectNode(selectedNodeName);
+            RedrawExample();
+        }
+
+        private void RefreshView(int selectedIdx)
+        {
+            SetTree();
+            SelectNode(selectedIdx);
+            RedrawExample();
+        }
+
         private static void ShowError(string message)
             => MessageBox.Show(message, "Œÿ»¡ ¿", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        private static TreeNode[] SelectNodes(IEnumerable<IFieldOptions> fields)
+            => fields.Select(field => new TreeNode(
+                field.Header,
+                field.Type == OptionsTypeEnum.Union ? SelectNodes(field.Fields) : Array.Empty<TreeNode>())
+                {
+                    Name = field.Header,
+                    Tag = field,
+                    BackColor = field.Type == OptionsTypeEnum.Union ? Color.WhiteSmoke : Color.Empty
+                }).ToArray();
     }
 }

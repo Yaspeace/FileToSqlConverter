@@ -1,14 +1,12 @@
 ﻿namespace ExcelToSqlConverter.Models.Fields
 {
-    public interface IFieldOptions
+    public interface IFieldOptions : IFields
     {
         string Header { get; set; }
 
         bool Quotes { get; set; }
 
         OptionsTypeEnum Type { get; }
-
-        ICollection<IFieldOptions> Fields { get; }
 
         string GetFieldValue(string[] data, int rowNumber);
 

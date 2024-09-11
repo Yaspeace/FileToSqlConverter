@@ -7,7 +7,7 @@ namespace ExcelToSqlConverter.Models.Fields
     {
         public string Header { get; set; } = "";
 
-        public ICollection<IFieldOptions> Fields { get; set; }
+        public List<IFieldOptions> Fields { get; set; } = new();
 
         public string Separator { get; set; } = "";
 
@@ -24,7 +24,6 @@ namespace ExcelToSqlConverter.Models.Fields
         {
             Header = header;
             Separator = separator;
-            Fields = new List<IFieldOptions>();
         }
 
         public string GetFieldValue(string[] data, int rowNumber)
