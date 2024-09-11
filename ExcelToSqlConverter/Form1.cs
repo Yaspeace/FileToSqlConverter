@@ -1,6 +1,7 @@
 using ExcelToSqlConverter.Controllers;
 using ExcelToSqlConverter.Enums;
 using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Helpers;
 using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Fields;
 
@@ -32,7 +33,7 @@ namespace ExcelToSqlConverter
             if (imported)
                 fileNameLbl.Text = form.FileName;
             else
-                ShowError("Не удалось импортировать указанный файл");
+                UI.ShowError("Не удалось импортировать указанный файл");
 
             RefreshView();
         }
@@ -52,7 +53,7 @@ namespace ExcelToSqlConverter
             if (imported)
                 fileNameLbl.Text = form.FileName;
             else
-                ShowError("Не удалось импортировать указанный файл");
+                UI.ShowError("Не удалось импортировать указанный файл");
 
             RefreshView();
         }
@@ -262,13 +263,11 @@ namespace ExcelToSqlConverter
             RedrawExample();
         }
 
-        private static void ShowError(string message)
-            => MessageBox.Show(message, "ОШИБКА", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
         private static TreeNode[] SelectNodes(IEnumerable<IFieldOptions> fields)
-            => fields.Select(field => new TreeNode(
-                field.Header,
-                field.Type == OptionsTypeEnum.Union ? SelectNodes(field.Fields) : Array.Empty<TreeNode>())
+            => fields.Select(field =>
+                new TreeNode(
+                    field.Header,
+                    field.Type == OptionsTypeEnum.Union ? SelectNodes(field.Fields) : Array.Empty<TreeNode>())
                 {
                     Name = field.Header,
                     Tag = field,
