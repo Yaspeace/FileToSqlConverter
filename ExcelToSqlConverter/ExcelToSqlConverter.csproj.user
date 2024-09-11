@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Compile Update="CsvImportForm.cs">
+    <Compile Update="Forms\Fields\FieldPropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ExcelImportForm.cs">
+    <Compile Update="Forms\Fields\UnionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FieldPropertiesForm.cs">
+    <Compile Update="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Form1.cs">
+    <Compile Update="Forms\Imports\CsvImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UnionForm.cs">
+    <Compile Update="Forms\Imports\ExcelImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

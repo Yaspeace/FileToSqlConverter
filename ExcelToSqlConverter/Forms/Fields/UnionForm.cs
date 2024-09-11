@@ -1,7 +1,6 @@
-﻿using ExcelToSqlConverter.Models.Fields;
-using ExcelToSqlConverter.Models.Fields.Properties;
+﻿using ExcelToSqlConverter.Models.Fields.Properties;
 
-namespace ExcelToSqlConverter
+namespace ExcelToSqlConverter.Forms.Fields
 {
     public partial class UnionForm : Form, IUnionProperties
     {

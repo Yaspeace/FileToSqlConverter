@@ -1,7 +1,7 @@
 ﻿using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Fields.Properties;
 
-namespace ExcelToSqlConverter
+namespace ExcelToSqlConverter.Forms.Fields
 {
     public partial class FieldPropertiesForm : Form, IFieldProperties
     {

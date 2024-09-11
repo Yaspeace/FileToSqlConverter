@@ -1,4 +1,4 @@
-﻿namespace ExcelToSqlConverter
+﻿namespace ExcelToSqlConverter.Forms.Fields
 {
     partial class UnionForm
     {

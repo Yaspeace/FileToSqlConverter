@@ -1,11 +1,13 @@
 using ExcelToSqlConverter.Controllers;
 using ExcelToSqlConverter.Enums;
 using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Forms.Fields;
+using ExcelToSqlConverter.Forms.Imports;
 using ExcelToSqlConverter.Helpers;
 using ExcelToSqlConverter.Models;
 using ExcelToSqlConverter.Models.Fields;
 
-namespace ExcelToSqlConverter
+namespace ExcelToSqlConverter.Forms
 {
     public partial class Form1 : Form
     {

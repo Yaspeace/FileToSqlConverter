@@ -1,6 +1,6 @@
 ﻿using ExcelToSqlConverter.Enums;
 
-namespace ExcelToSqlConverter
+namespace ExcelToSqlConverter.Forms.Imports
 {
     public partial class ExcelImportForm : Form
     {

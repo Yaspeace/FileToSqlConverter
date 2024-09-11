@@ -1,4 +1,4 @@
-﻿namespace ExcelToSqlConverter
+﻿namespace ExcelToSqlConverter.Forms
 {
     partial class Form1
     {
