@@ -92,33 +92,94 @@ namespace ExcelToSqlConverter.Controllers
                 field.Clone($"{field.Header}_Копия{_unionCounter++}"));
         }
 
-        public void ReplaceFieldTo(IFieldOptions field, IFieldOptions target)
+        public void ReplaceField(IFieldOptions field, IFields parent, IFieldOptions? target, IFields? targetParent)
         {
-            if (
-                field.Type != OptionsTypeEnum.Field ||
-                target.Type != OptionsTypeEnum.Union)
+            if (target is null) // null или root
             {
-                return;
+                if (targetParent is null) // null
+                {
+                    if (parent != this)
+                    {
+                        parent.Fields.Remove(field);
+                        Fields.Add(field);
+                    }
+                    else
+                    {
+                        Fields.MoveToBack(field);
+                    }
+                }
+                else // root
+                {
+                    if (parent != this)
+                    {
+                        parent.Fields.Remove(field);
+                        Fields.Insert(0, field);
+                    }
+                    else
+                    {
+                        Fields.MoveToTop(field);
+                    }
+                }
             }
+            else // в остальных случаях все поля точно не null.
+            {
+                if (field == target)
+                {
+                    return;
+                }
 
-            target.Fields.Add(field);
-            Fields.Remove(field);
+                if (target.Type == OptionsTypeEnum.Union)
+                {
+                    if (field.Type == OptionsTypeEnum.Union)
+                    {
+                        Fields.MoveToIndex(Fields.IndexOf(target), field);
+                    }
+                    else
+                    {
+                        parent.Fields.Remove(field);
+                        target.Fields.Add(field);
+                    }
+                }
+                else
+                {
+                    if (parent == targetParent)
+                    {
+                        parent.Fields.MoveToIndex(targetParent.Fields.IndexOf(target), field);
+                    }
+                    else
+                    {
+                        var fields = targetParent?.Fields ?? Fields;
+
+                        var targetIdx = fields.IndexOf(target);
+                        parent.Fields.Remove(field);
+                        fields.Insert(targetIdx, field);
+                    }
+                }
+            }
         }
 
-        public void Remove(IFieldOptions fieldOpts)
+        public void Remove(IFieldOptions fieldOpts, IFields parent)
         {
-            if (fieldOpts.Type == OptionsTypeEnum.Union)
-                Fields.AddRange(fieldOpts.Fields);
+            if (parent == this)
+            {
+                if (fieldOpts.Type == OptionsTypeEnum.Union)
+                    Fields.AddRange(fieldOpts.Fields);
 
-            Fields.Remove(fieldOpts);
+                Fields.Remove(fieldOpts);
+            }
+            else
+            {
+                parent.Fields.Remove(fieldOpts);
+                Fields.Add(fieldOpts);
+            }
         }
 
-        public void Move(IFieldOptions field, bool up)
+        public void Move(IFieldOptions field, IFields parent, bool up)
         {
             if (up)
-                Fields.MoveForward(field);
+                parent.Fields.MoveForward(field);
             else
-                Fields.MoveBackward(field);
+                parent.Fields.MoveBackward(field);
         }
 
 
