@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using ExcelToSqlConverter.Models.Files;
 
 namespace ExcelToSqlConverter.Forms.Imports
 {
@@ -15,11 +7,7 @@ namespace ExcelToSqlConverter.Forms.Imports
         public ManualImportForm()
         {
             InitializeComponent();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+            dataGridView1.DataSource = ManualDataStorage.Data;
         }
     }
 }

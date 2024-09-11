@@ -94,7 +94,6 @@
             dataGridView1.RowTemplate.Height = 29;
             dataGridView1.Size = new Size(794, 394);
             dataGridView1.TabIndex = 2;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // ManualImportForm
             // 

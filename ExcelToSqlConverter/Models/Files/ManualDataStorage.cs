@@ -1,9 +1,22 @@
-﻿namespace ExcelToSqlConverter.Models.Files
+﻿using System.Data;
+
+namespace ExcelToSqlConverter.Models.Files
 {
     public static class ManualDataStorage
     {
-        public static List<string> Headers = new();
+        private static readonly DataTable _data = new();
 
-        public static List<List<string>> Data = new();
+        public static DataTable Data
+        {
+            get
+            {
+                if (_data.Columns.Count == 0)
+                {
+                    _data.Columns.Add();
+                }
+
+                return _data;
+            }
+        }
     }
 }
