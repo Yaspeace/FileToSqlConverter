@@ -32,13 +32,13 @@
             panel1 = new Panel();
             okBtn = new Button();
             cancelBtn = new Button();
-            dataGridView1 = new DataGridView();
+            grid = new DataGridView();
             panel2 = new Panel();
             removeBtn = new Button();
             addBtn = new Button();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grid).BeginInit();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,7 +47,7 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(panel1, 0, 2);
-            tableLayoutPanel1.Controls.Add(dataGridView1, 0, 1);
+            tableLayoutPanel1.Controls.Add(grid, 0, 1);
             tableLayoutPanel1.Controls.Add(panel2, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -91,16 +91,17 @@
             cancelBtn.Text = "Отмена";
             cancelBtn.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // grid
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(3, 53);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(794, 344);
-            dataGridView1.TabIndex = 2;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.Dock = DockStyle.Fill;
+            grid.Location = new Point(3, 53);
+            grid.Name = "grid";
+            grid.RowHeadersWidth = 51;
+            grid.RowTemplate.Height = 29;
+            grid.Size = new Size(794, 344);
+            grid.TabIndex = 2;
+            grid.KeyDown += grid_KeyDown;
             // 
             // panel2
             // 
@@ -142,7 +143,7 @@
             Text = "Ввод ручных данных";
             tableLayoutPanel1.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grid).EndInit();
             panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -153,7 +154,7 @@
         private Button cancelBtn;
         private Panel panel1;
         private Button okBtn;
-        private DataGridView dataGridView1;
+        private DataGridView grid;
         private Panel panel2;
         private Button removeBtn;
         private Button addBtn;

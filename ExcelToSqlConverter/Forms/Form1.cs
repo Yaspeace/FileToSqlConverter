@@ -278,7 +278,18 @@ namespace ExcelToSqlConverter.Forms
 
         private void manualToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new ManualImportForm().ShowDialog();
+            if (new ManualImportForm().ShowDialog() != DialogResult.OK) return;
+
+            Reset();
+            var imported = _controller.ImportManualData();
+            SetImported(imported);
+
+            if (imported)
+                fileNameLbl.Text = "[Данные введены вручную]";
+            else
+                UI.ShowError("Произошла ошибка при считывании введенных данных");
+
+            RefreshView();
         }
     }
 }
