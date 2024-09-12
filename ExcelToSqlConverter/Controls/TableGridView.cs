@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExcelToSqlConverter.Models.Files;
+using System.Windows.Forms;
 
 namespace ExcelToSqlConverter.Controls
 {
@@ -23,6 +25,19 @@ namespace ExcelToSqlConverter.Controls
             AllowUserToDeleteRows = true;
             AllowUserToResizeColumns = true;
             AllowUserToResizeRows = true;
+        }
+
+        public void RemoveSelectedColumns()
+        {
+            var idx = new SortedSet<int>(Enumerable
+                .Range(0, SelectedCells.Count)
+                .Select(i => SelectedCells[i].ColumnIndex))
+                .Reverse();
+
+            foreach (var i in idx)
+            {
+                _table.Columns.RemoveAt(i);
+            }
         }
 
         protected override void WndProc(ref Message m)
