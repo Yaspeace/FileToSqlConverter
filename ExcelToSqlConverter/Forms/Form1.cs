@@ -275,5 +275,21 @@ namespace ExcelToSqlConverter.Forms
                     Tag = field,
                     BackColor = field.Type == OptionsTypeEnum.Union ? Color.WhiteSmoke : Color.Empty
                 }).ToArray();
+
+        private void manualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (new ManualImportForm().ShowDialog() != DialogResult.OK) return;
+
+            Reset();
+            var imported = _controller.ImportManualData();
+            SetImported(imported);
+
+            if (imported)
+                fileNameLbl.Text = "[Данные введены вручную]";
+            else
+                UI.ShowError("Произошла ошибка при считывании введенных данных");
+
+            RefreshView();
+        }
     }
 }

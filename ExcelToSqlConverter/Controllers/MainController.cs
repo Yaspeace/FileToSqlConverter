@@ -59,6 +59,18 @@ namespace ExcelToSqlConverter.Controllers
             }
         }
 
+        public bool ImportManualData()
+        {
+            try
+            {
+                return ImportFile(new ManualDataAdapter());
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private bool ImportFile(IFileAdapter adapter)
         {
             Fields.Clear();
@@ -181,8 +193,6 @@ namespace ExcelToSqlConverter.Controllers
             else
                 parent.Fields.MoveBackward(field);
         }
-
-
 
         public string GetExampleString()
             => exporter.GetExample();

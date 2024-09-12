@@ -171,35 +171,34 @@
             // 
             импортToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { excelToolStripMenuItem, csvToolStripMenuItem, manualToolStripMenuItem });
             импортToolStripMenuItem.Name = "импортToolStripMenuItem";
-            импортToolStripMenuItem.Size = new Size(147, 26);
+            импортToolStripMenuItem.Size = new Size(224, 26);
             импортToolStripMenuItem.Text = "Импорт";
             // 
             // excelToolStripMenuItem
             // 
             excelToolStripMenuItem.Name = "excelToolStripMenuItem";
-            excelToolStripMenuItem.Size = new Size(188, 26);
+            excelToolStripMenuItem.Size = new Size(224, 26);
             excelToolStripMenuItem.Text = "Excel...";
             excelToolStripMenuItem.Click += ImportExcel;
             // 
             // csvToolStripMenuItem
             // 
             csvToolStripMenuItem.Name = "csvToolStripMenuItem";
-            csvToolStripMenuItem.Size = new Size(188, 26);
+            csvToolStripMenuItem.Size = new Size(224, 26);
             csvToolStripMenuItem.Text = "CSV...";
             csvToolStripMenuItem.Click += ImportCsv;
             // 
             // manualToolStripMenuItem
             // 
-            manualToolStripMenuItem.Enabled = false;
             manualToolStripMenuItem.Name = "manualToolStripMenuItem";
-            manualToolStripMenuItem.Size = new Size(188, 26);
+            manualToolStripMenuItem.Size = new Size(224, 26);
             manualToolStripMenuItem.Text = "Ручной ввод...";
-            manualToolStripMenuItem.ToolTipText = "В разработке...";
+            manualToolStripMenuItem.Click += manualToolStripMenuItem_Click;
             // 
             // resetToolStripMenuItem
             // 
             resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            resetToolStripMenuItem.Size = new Size(147, 26);
+            resetToolStripMenuItem.Size = new Size(224, 26);
             resetToolStripMenuItem.Text = "Сброс";
             resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
             // 
