@@ -18,9 +18,11 @@
         {
             if (End) return null;
 
-            return ManualDataStorage.Data.Rows[curRow].ItemArray?
+            var res = ManualDataStorage.Data.Rows[curRow].ItemArray?
                 .Select(obj => obj?.ToString() ?? string.Empty)
                 .ToArray();
+            ++curRow;
+            return res;
         }
 
         public void Reset()
