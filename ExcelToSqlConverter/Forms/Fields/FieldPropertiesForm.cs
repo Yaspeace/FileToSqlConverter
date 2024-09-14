@@ -12,7 +12,7 @@ namespace ExcelToSqlConverter.Forms.Fields
             => quotesCb.Checked;
 
         public Replacement Replacement
-            => new(replaceTb.Text, replaceWithTb.Text);
+            => new(replaceTb.Text.Replace("\r\n", "\n"), replaceWithTb.Text);
 
         public string Format
             => formatTb.Text;
