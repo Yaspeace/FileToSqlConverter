@@ -4,56 +4,36 @@
     {
         public bool End => _sr.EndOfStream;
 
-        public bool HeadersLine { get; private set; }
+        private readonly StreamReader _sr;
 
-        private StreamReader _sr;
+        private readonly char _splitter;
 
-        private char _splitter;
-
-        private string _filename;
+        private readonly string[]? _headers;
 
         public CsvFileAdapter(string filename, char splitter, bool headersLine)
         {
             _splitter = splitter;
             _sr = new StreamReader(filename);
-            _filename = filename;
-            HeadersLine = headersLine;
+            _headers = headersLine ? ReadNextData() : null;
         }
 
-        public string[]? Read()
-            => _sr.ReadLine()?.Split(_splitter);
+        public string[]? ReadNextData()
+            => StringToData(_sr.ReadLine());
 
         public void Reset()
-            => _sr = new StreamReader(_filename);
-
-        public string[]? ResetAndReadData()
         {
-            Reset();
-            var data = Read();
-            if (HeadersLine) data = Read();
-
-            return data;
+            _sr.BaseStream.Position = 0;
+            _sr.DiscardBufferedData();
+            if (_headers != null) _sr.ReadLine();
         }
 
-        public string[]? ResetAndReadHeaders()
-        {
-            Reset();
-            return HeadersLine ? Read() : null;
-        }
-
-        public (string[]? headers, string[]? data) ResetAndReadHeadersAndData()
-        {
-            Reset();
-            var data = Read();
-            return HeadersLine
-                ? (data, Read())
-                : (null, data);
-        }
-
-        public void Close()
-            => _sr.Close();
+        public string[]? GetHeaders()
+            => _headers;
 
         public void Dispose()
             => _sr.Dispose();
+
+        private string[]? StringToData(string? str)
+            => str?.Split(_splitter);
     }
 }

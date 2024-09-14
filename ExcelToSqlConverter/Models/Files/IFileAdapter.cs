@@ -4,16 +4,10 @@
     {
         public bool End { get; }
 
-        public string[]? Read();
+        public string[]? ReadNextData();
+
+        public string[]? GetHeaders();
 
         public void Reset();
-
-        public string[]? ResetAndReadData();
-
-        public string[]? ResetAndReadHeaders();
-
-        public (string[]? headers, string[]? data) ResetAndReadHeadersAndData();
-
-        void Close();
     }
 }

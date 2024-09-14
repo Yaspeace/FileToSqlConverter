@@ -4,71 +4,39 @@ namespace ExcelToSqlConverter.Models.Files
 {
     public class OpenOffiseExcelFileAdapter : IFileAdapter
     {
-        public bool End => curRow > ws.Dimension.End.Row;
+        public bool End => _curRow > _ws.Dimension.End.Row;
 
-        public bool HeadersLine { get; private set; }
+        private readonly bool _headersLine;
 
-        private readonly ExcelPackage pack;
-        private readonly ExcelWorksheet ws;
-        int curRow = 1;
+        private readonly ExcelPackage _pack;
+        private readonly ExcelWorksheet _ws;
+        int _curRow = 1;
 
         public OpenOffiseExcelFileAdapter(string filename, bool headersLine, string listName = "")
         {
-            pack = new ExcelPackage(filename);
-            ws = string.IsNullOrEmpty(listName)
-                ? pack.Workbook.Worksheets[0]
-                : pack.Workbook.Worksheets[listName];
-            HeadersLine = headersLine;
+            _pack = new ExcelPackage(filename);
+            _ws = string.IsNullOrEmpty(listName)
+                ? _pack.Workbook.Worksheets[0]
+                : _pack.Workbook.Worksheets[listName];
+            _headersLine = headersLine;
         }
 
-        public string[]? Read()
-        {
-            if (End) return null;
+        public string[]? GetHeaders()
+            => _headersLine ? ReadRow(1) : null;
 
-            var colNum = ws.Columns.EndColumn;
-
-            var res = Enumerable
-                .Range(1, colNum)
-                .Select(colIdx => ws.Cells[curRow, colIdx].Value?.ToString() ?? string.Empty)
-                .ToArray();
-            ++curRow;
-
-            return res;
-        }
+        public string[]? ReadNextData()
+            => End ? null : ReadRow(_curRow++);
 
         public void Reset()
-            => curRow = 1;
-
-        public string[]? ResetAndReadData()
-        {
-            Reset();
-            var data = Read();
-            if (HeadersLine) data = Read();
-
-            return data;
-        }
-
-        public string[]? ResetAndReadHeaders()
-        {
-            Reset();
-            return HeadersLine ? Read() : null;
-        }
-
-        public (string[]? headers, string[]? data) ResetAndReadHeadersAndData()
-        {
-            Reset();
-            var data = Read();
-            return HeadersLine
-                ? (data, Read())
-                : (null, data);
-        }
-
-        public void Close()
-        {
-
-        }
+            => _curRow = _headersLine ? 2 : 1;
 
         public void Dispose()
-            => pack.Dispose();
+            => _pack.Dispose();
+
+        private string[]? ReadRow(int row)
+            => Enumerable
+                .Range(1, _ws.Columns.EndColumn)
+                .Select(colIdx => _ws.Cells[row, colIdx].Value?.ToString() ?? string.Empty)
+                .ToArray();
     }
 }

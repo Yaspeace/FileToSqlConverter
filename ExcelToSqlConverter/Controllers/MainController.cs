@@ -76,7 +76,10 @@ namespace ExcelToSqlConverter.Controllers
             Fields.Clear();
             Adapter = adapter;
 
-            var (headers, data) = Adapter.ResetAndReadHeadersAndData();
+            Adapter.Reset();
+            var headers = Adapter.GetHeaders();
+            var data = Adapter.ReadNextData();
+
             if (data is null) return false;
 
             for (int i = 0; i < data.Length; i++)

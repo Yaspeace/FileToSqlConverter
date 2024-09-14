@@ -11,7 +11,8 @@
 
         public void Export(StreamWriter stream)
         {
-            var data = _handler.Adapter.ResetAndReadData();
+            _handler.Adapter.Reset();
+            var data = _handler.Adapter.ReadNextData();
 
             if (data is null) return;
 
@@ -20,7 +21,7 @@
 
             while (!_handler.Adapter.End)
             {
-                data = _handler.Adapter.Read();
+                data = _handler.Adapter.ReadNextData();
                 if (data == null) break;
 
                 stream.Write($",\n\t{RecordFromData(data, rowNum++)}");
@@ -31,7 +32,8 @@
 
         public string GetExample()
         {
-            var data = _handler.Adapter.ResetAndReadData();
+            _handler.Adapter.Reset();
+            var data = _handler.Adapter.ReadNextData();
 
             if (data is null) return string.Empty;
 
