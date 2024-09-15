@@ -1,4 +1,6 @@
-﻿namespace ExcelToSqlConverter.Models.Fields.Properties
+﻿using ExcelToSqlConverter.Models.PropertyGroups;
+
+namespace ExcelToSqlConverter.Models.Fields.Properties
 {
     public interface IFieldProperties
     {
@@ -9,5 +11,7 @@
         Replacement Replacement { get; }
 
         string Format { get; }
+
+        ArrayOptions? ArrayOptions { get; }
     }
 }

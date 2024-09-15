@@ -1,5 +1,6 @@
 ﻿using ExcelToSqlConverter.Extensions;
 using ExcelToSqlConverter.Models.Fields.Properties;
+using ExcelToSqlConverter.Models.PropertyGroups;
 
 namespace ExcelToSqlConverter.Models.Fields
 {
@@ -15,29 +16,40 @@ namespace ExcelToSqlConverter.Models.Fields
 
         public string Format { get; set; }
 
+        public ArrayOptions? ArrayOptions { get; set; }
+
         public OptionsTypeEnum Type
             => OptionsTypeEnum.Field;
 
         public List<IFieldOptions> Fields
             => new();
 
-        public FieldOptions(string header, int index, string format = "{value}", Replacement replacement = new())
+        public FieldOptions(string header, int index, string format = "{value}")
         {
             Header = header;
             DataIndex = index;
             Format = format;
-            Replacement = replacement;
+
+            // TODO: убрать
+            ArrayOptions = new(",");
         }
 
-        public string GetFieldValue(string[] data, int rowNumber)
+        public string[] GetFieldValue(string[] data, int row)
         {
-            var res = data[DataIndex].CustomFormat(Format, rowNumber);
+            var res = ArrayOptions is null
+                ? new string[] { data[DataIndex] }
+                : data[DataIndex].Split(ArrayOptions.Value.divider, StringSplitOptions.TrimEntries);
 
-            if (!Replacement.Empty)
-                res = res.Replace(Replacement.replace, Replacement.with);
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = res[i].CustomFormat(Format, row);
 
-            if (Quotes)
-                res = res.SqlQuotes();
+                if (!Replacement.Empty)
+                    res[i] = res[i].Replace(Replacement.replace, Replacement.with);
+
+                if (Quotes)
+                    res[i] = res[i].SqlQuotes();
+            }
 
             return res;
         }
@@ -48,11 +60,12 @@ namespace ExcelToSqlConverter.Models.Fields
             Quotes = props.Quotes;
             Replacement = props.Replacement;
             Format = props.Format;
+            ArrayOptions = props.ArrayOptions;
         }
 
         public IFieldOptions Clone(string newHeader)
         {
-            var clone = new FieldOptions(newHeader, DataIndex, Format, Replacement);
+            var clone = new FieldOptions(newHeader, DataIndex, Format);
             clone.SetFromProperties(this);
             clone.Header = newHeader;
             return clone;

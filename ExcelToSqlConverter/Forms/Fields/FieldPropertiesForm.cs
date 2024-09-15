@@ -1,5 +1,5 @@
-﻿using ExcelToSqlConverter.Models;
-using ExcelToSqlConverter.Models.Fields.Properties;
+﻿using ExcelToSqlConverter.Models.Fields.Properties;
+using ExcelToSqlConverter.Models.PropertyGroups;
 
 namespace ExcelToSqlConverter.Forms.Fields
 {
@@ -16,6 +16,8 @@ namespace ExcelToSqlConverter.Forms.Fields
 
         public string Format
             => formatTb.Text;
+
+        public ArrayOptions? ArrayOptions => new(",");
 
         public FieldPropertiesForm(IFieldProperties opt)
         {

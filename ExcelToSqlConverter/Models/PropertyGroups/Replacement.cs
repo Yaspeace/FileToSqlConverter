@@ -1,4 +1,4 @@
-﻿namespace ExcelToSqlConverter.Models
+﻿namespace ExcelToSqlConverter.Models.PropertyGroups
 {
     /// <summary>
     /// Параметры замены строк.

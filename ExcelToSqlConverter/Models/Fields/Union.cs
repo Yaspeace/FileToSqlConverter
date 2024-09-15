@@ -1,5 +1,8 @@
-﻿using ExcelToSqlConverter.Extensions;
+﻿using System;
+using ExcelToSqlConverter.Extensions;
+using ExcelToSqlConverter.Helpers;
 using ExcelToSqlConverter.Models.Fields.Properties;
+using ExcelToSqlConverter.Models.PropertyGroups;
 
 namespace ExcelToSqlConverter.Models.Fields
 {
@@ -17,6 +20,8 @@ namespace ExcelToSqlConverter.Models.Fields
 
         public string FormatString { get; set; } = string.Empty;
 
+        public ArrayOptions? ArrayOptions => null;
+
         public OptionsTypeEnum Type
             => OptionsTypeEnum.Union;
 
@@ -26,17 +31,20 @@ namespace ExcelToSqlConverter.Models.Fields
             Separator = separator;
         }
 
-        public string GetFieldValue(string[] data, int rowNumber)
+        public string[] GetFieldValue(string[] data, int row)
         {
-            var fieldValues = Fields.Select(x => x.GetFieldValue(data, rowNumber)).ToArray();
+            var fieldValues = Fields.Select(x => x.GetFieldValue(data, row)).ToArray();
+            var results = new List<string>();
+            foreach (var values in CollectionOperations.CrossJoin(fieldValues))
+            {
+                var res = FormatMode
+                    ? FormatString.CustomFormat(row, values)
+                    : string.Join(Separator, values);
 
-            var res = FormatMode
-                ? FormatString.CustomFormat(rowNumber, fieldValues)
-                : string.Join(Separator, fieldValues);
+                results.Add(Quotes ? res.SqlQuotes() : res);
+            }
 
-            return Quotes
-                ? res.SqlQuotes()
-                : res;
+            return results.ToArray();
         }
 
         public void SetFromProperties(IUnionProperties props)
